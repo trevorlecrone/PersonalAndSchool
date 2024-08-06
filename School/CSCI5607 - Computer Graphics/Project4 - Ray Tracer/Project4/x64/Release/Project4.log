@@ -1,0 +1,68 @@
+﻿  DLight.cpp
+  FTriangle.cpp
+  image.cpp
+image.cpp(72): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+image.cpp(160): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(161): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(162): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(179): warning C4244: 'argument': conversion from 'double' to 'Component', possible loss of data
+image.cpp(240): warning C4244: 'argument': conversion from 'double' to 'Component', possible loss of data
+image.cpp(288): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(297): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(298): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(299): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(338): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(339): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(340): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(346): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(347): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(348): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(354): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(355): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(356): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(362): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(363): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(364): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(396): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+image.cpp(402): warning C4244: '/=': conversion from 'double' to 'float', possible loss of data
+image.cpp(418): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+image.cpp(424): warning C4244: '/=': conversion from 'double' to 'float', possible loss of data
+image.cpp(434): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(565): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(574): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+image.cpp(591): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(595): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+image.cpp(596): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+image.cpp(599): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+image.cpp(600): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+image.cpp(641): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+image.cpp(671): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(672): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(681): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(682): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(749): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(750): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+image.cpp(686): warning C4101: 'y': unreferenced local variable
+image.cpp(685): warning C4101: 'x': unreferenced local variable
+  main.cpp
+main.cpp(248): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+main.cpp(249): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+main.cpp(250): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+main.cpp(475): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type '__int64'
+  main.cpp(475): note: consider using '%lld' in the format string
+  main.cpp(475): note: consider using '%Id' in the format string
+  main.cpp(475): note: consider using '%I64d' in the format string
+main.cpp(458): warning C4101: 'p': unreferenced local variable
+main.cpp(457): warning C4101: 's_index': unreferenced local variable
+  Material.cpp
+  NTriangle.cpp
+  pixel.cpp
+  PLight.cpp
+  Ray.cpp
+  SLight.cpp
+  Sphere.cpp
+  Vec.cpp
+  Generating code
+  All 374 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Project4.vcxproj -> C:\Users\Trevor\source\repos\CSCI5607\Project4\x64\Release\RayTracer.exe
