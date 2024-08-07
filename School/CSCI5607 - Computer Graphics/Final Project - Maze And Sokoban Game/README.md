@@ -9,7 +9,7 @@ Here are a few sample screenshots
 
 Gameboy objects load sokoban levels when interacted with.
 
-![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Gameboy.PNG?raw=true)
+![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/GameBoy.PNG?raw=true)
 
 ![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Sokoban.PNG?raw=true)
 
