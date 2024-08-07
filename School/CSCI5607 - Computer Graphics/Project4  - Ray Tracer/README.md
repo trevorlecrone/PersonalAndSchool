@@ -6,12 +6,17 @@ Improvements I plan to make (in addition to general code cleanup) include adding
 Should build with provided VisualStudio files in VisualStudio 2022. -openmp flag may need manually to be set to parallelize
 
 Here are a few sample outputs
+
 .\RayTracer.exe ../../SceneFiles/Dragon.scn
+
 ![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/dragon.png?raw=true)
 
+
 .\RayTracer.exe ../../SceneFiles/bottle.scn
+
 ![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/bottle.png?raw=true)
 
-.\RayTracer.exe ../../SceneFiles/spheres2.scn
-![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/quantRubiks.bmp?raw=true)
 
+.\RayTracer.exe ../../SceneFiles/spheres2.scn
+
+![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/spheres2.png?raw=true)
