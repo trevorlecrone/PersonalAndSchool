@@ -7,4 +7,4 @@ Could be improved by fixing release build bug, and adding additional obsticles o
 
 example play of map 2 (.\PinballGame.exe PinballGame2.txt)
 
-![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/PinballDemo.mp4?raw=true)
+<video src="https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/PinballDemo.mp4" />
