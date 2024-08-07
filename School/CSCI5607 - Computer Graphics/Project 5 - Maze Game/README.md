@@ -9,17 +9,17 @@ Here are a few sample screenshots
 
 Different color "doors" block the player's path
 
-![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Door.png?raw=true)
+![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Door.PNG?raw=true)
 
 
 Keys are found that raise doors up
 
-![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Key.png?raw=true)
+![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Key.PNG?raw=true)
 
 
-![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/AcquiredKey.png?raw=true)
+![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/AcquiredKey.PNG?raw=true)
 
 
 Reaching the goal loads the next level
 
-![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Goal.png?raw=true)
+![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Goal.PNG?raw=true)
