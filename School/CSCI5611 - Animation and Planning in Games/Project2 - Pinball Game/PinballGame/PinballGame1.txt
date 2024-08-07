@@ -1,0 +1,72 @@
+# 0 for demo, 1 for game
+MODE 1
+
+#Lines format - id : x1, y1, x2, y2, elasticity
+#Left Wall
+LineWall 0 : 150.0, 100.0, 150.0, 350.0, 0.8
+LineWall 1 : 150.0, 350.0, 190.0, 375.0, 0.8
+LineWall 2 : 190.0, 375.0, 190.0, 425.0, 0.8
+LineWall 3 : 190.0, 425.0, 150.0, 450.0, 0.8
+LineWall 4 : 150.0, 450.0, 150.0, 750.0, 0.8
+
+#Right Wall
+LineWall 5 : 650.0, 100.0, 650.0, 350.0, 0.8
+LineWall 6 : 650.0, 350.0, 610.0, 375.0, 0.8
+LineWall 7 : 610.0, 375.0, 610.0, 425.0, 0.8
+LineWall 8 : 610.0, 425.0, 650.0, 450.0, 0.8
+LineWall 9 : 650.0, 450.0, 650.0, 700.0, 0.8
+
+#Left Flipper Guard 
+Bumper 38 : 200.0, 310.0, 10, 0.85
+LineWall 10 : 200.0, 300.0, 200.0, 200.0, 0.8
+LineWall 11 : 200.0, 200.0, 250.0, 114.397, 0.8
+
+LineWall 12 : 250.0, 300.0, 250.0, 200.0, 0.8
+LineWall 13 : 250.0, 200.0, 275.0, 200.0, 0.8
+LineWall 14 : 275.0, 200.0, 250.0, 300.0, 0.8
+
+#Flipper format - id : x1, y1, x2, y2, mass, elasticity. Should be a straight line in + or - x direction
+LeftFlipper 15 : 250.0, 114.397, 375.0, 114.397, 15, 0.7
+
+#Right Flipper Guard 
+Bumper 37 : 600.0, 310.0, 10, 0.85
+LineWall 16 : 600.0, 300.0, 600.0, 200.0, 0.8
+LineWall 17 : 600.0, 200.0, 550.0, 114.397, 0.8
+
+LineWall 18 : 550.0, 300.0, 550.0, 200.0, 0.8
+LineWall 19 : 550.0, 200.0, 525.0, 200.0, 0.8
+LineWall 20 : 525.0, 200.0, 550.0, 300.0, 0.8
+
+RightFlipper 21 : 550.0, 114.397, 425.0, 114.397, 15, 0.7
+
+#Pinball format - id : x, y, radius, mass, elasticity, velx, vely
+Pinball 22 : 675.0, 215.0, 15, 1.0, 0.9, 0.0, 0.0
+
+# Reactive bumper format - id : x, y, radius
+ReactiveBumper 23 : 350.0, 575.0, 15
+ReactiveBumper 24 : 450.0, 550.0, 15
+ReactiveBumper 25 : 500.0, 650.0, 15
+ReactiveBumper 26 : 380.0, 670.0, 15
+
+# Bumper format - id : x, y, radius, elasticity
+Bumper 27 : 550.0, 425.0, 15, 0.85
+Bumper 28 : 525.0, 500.0, 15, 0.85
+
+
+ Black and White Hole format - BH id, WH id : BH x, BH y, WH x, WH y, BH & WH render radius, BH gravity radius
+BWH 29 30: 200.0, 450.0, 600.0, 600.0, 15.0, 30.0
+
+
+#Ceiling
+LineWall 31 : 150.0, 750.0, 650.0, 750.0, 0.8
+
+#Plunger channel
+LineWall 32 : 700.0, 100.0, 700.0, 700.0, 0.8
+LineWall 33 : 700.0, 700.0, 675.0, 750.0, 0.8
+LineWall 34 : 675.0, 750.0, 650.0, 750.0, 0.8
+LineWall 35 : 700.0, 200.0, 650.0, 200.0, 0.8
+LineWall 36 : 700.0, 100.0, 650.0, 100.0, 0.8
+
+#bumper guard 
+LineWall 39 : 300.0, 510.0, 460.0, 450.0, 0.8
+LineWall 40 : 300.0, 510.0, 220.0, 530.0, 0.8

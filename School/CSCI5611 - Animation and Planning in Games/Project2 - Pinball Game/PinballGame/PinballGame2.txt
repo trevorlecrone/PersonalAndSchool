@@ -1,0 +1,68 @@
+# 0 for demo, 1 for game with plunger, 2 for game W/O plunger
+MODE 2
+
+#Lines format - id : x1, y1, x2, y2, elasticity
+#Left Wall
+LineWall 0 : 150.0, 100.0, 150.0, 350.0, 0.8
+LineWall 1 : 150.0, 350.0, 190.0, 375.0, 0.8
+LineWall 2 : 190.0, 375.0, 190.0, 425.0, 0.8
+LineWall 3 : 190.0, 425.0, 150.0, 450.0, 0.8
+LineWall 4 : 150.0, 450.0, 150.0, 750.0, 0.8
+
+#Right Wall
+LineWall 5 : 650.0, 100.0, 650.0, 350.0, 0.8
+LineWall 6 : 650.0, 350.0, 610.0, 375.0, 0.8
+LineWall 7 : 610.0, 375.0, 610.0, 425.0, 0.8
+LineWall 8 : 610.0, 425.0, 650.0, 450.0, 0.8
+LineWall 9 : 650.0, 450.0, 650.0, 750.0, 0.8
+
+#Left Flipper Guard 
+Bumper 10 : 200.0, 310.0, 10, 0.85
+LineWall 11 : 200.0, 300.0, 200.0, 200.0, 0.8
+LineWall 12 : 200.0, 200.0, 250.0, 114.397, 0.8
+
+LineWall 13 : 250.0, 300.0, 250.0, 200.0, 0.8
+LineWall 14 : 250.0, 200.0, 275.0, 200.0, 0.8
+LineWall 15 : 275.0, 200.0, 250.0, 300.0, 0.8
+
+#Flipper format - id : x1, y1, x2, y2, mass, elasticity. Should be a straight line in + or - x direction
+LeftFlipper 16 : 250.0, 114.397, 375.0, 114.397, 25, 0.7
+
+#Right Flipper Guard 
+Bumper 17 : 600.0, 310.0, 10, 0.85
+LineWall 18 : 600.0, 300.0, 600.0, 200.0, 0.8
+LineWall 19 : 600.0, 200.0, 550.0, 114.397, 0.8
+
+LineWall 20 : 550.0, 300.0, 550.0, 200.0, 0.8
+LineWall 21 : 550.0, 200.0, 525.0, 200.0, 0.8
+LineWall 22 : 525.0, 200.0, 550.0, 300.0, 0.8
+
+RightFlipper 23 : 550.0, 114.397, 425.0, 114.397, 25, 0.7
+
+#Pinball format - id : x, y, radius, mass, elasticity, velx, vely
+Pinball 24 : 225.0, 215.0, 15, 1.0, 0.9, 0.0, 0.0
+Pinball 25 : 575.0, 215.0, 15, 1.0, 0.9, 0.0, 0.0
+Pinball 26 : 200.0, 550.0, 15, 1.0, 0.9, 0.0, 0.0
+Pinball 27 : 600.0, 550.0, 15, 1.0, 0.9, 0.0, 0.0
+
+# Reactive bumper format - id : x, y, radius
+ReactiveBumper 28 : 300.0, 500.0, 15
+ReactiveBumper 29 : 250.0, 600.0, 15
+ReactiveBumper 30 : 500.0, 500.0, 15
+ReactiveBumper 31 : 550.0, 600.0, 15
+ReactiveBumper 32 : 475.0, 670.0, 15
+ReactiveBumper 33 : 325.0, 670.0, 15
+
+# Bumper format - id : x, y, radius, elasticity
+Bumper 34 : 400.0, 700.0, 15, 0.85
+Bumper 35 : 400.0, 500.0, 15, 0.85
+
+ Black and White Hole format - BH id, WH id : BH x, BH y, WH x, WH y, BH & WH render radius, BH gravity radius
+BWH 36 37: 200.0, 450.0, 600.0, 700.0, 15.0, 30.0
+BWH 38 39: 600.0, 450.0, 200.0, 700.0, 15.0, 30.0
+
+#Ceiling
+LineWall 40 : 150.0, 750.0, 650.0, 750.0, 0.8
+
+Bumper 41 : 205.0, 600.0, 10, 0.85
+Bumper 42 : 595.0, 600.0, 10, 0.85
