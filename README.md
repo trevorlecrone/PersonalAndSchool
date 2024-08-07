@@ -5,8 +5,6 @@ Academic projects may contain some sample or example code provided by instructor
 The bulk of all academic projects is still my own code. They will be left in the state they were when originally turned in, with minor changes to get the project building in visual studio 2022 rather than 2017. They may be in need of some cleanup or speedup that I was
 not able to get to when I originally tuend them in but any improvements or cleanup I do will be in a corresponding project in personal.
 
-
-
 MIT License
 
 Copyright (c) 2024 Trevor LeCrone
@@ -27,4 +25,5 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE. IF YOU ARE A STUDENT ENROLLED IN ONE OF THE COURSES I DID THESE PROJECTS FOR,
+DO NOT USE MY CODE AND PASS IT OFF AS YOUR OWN.
