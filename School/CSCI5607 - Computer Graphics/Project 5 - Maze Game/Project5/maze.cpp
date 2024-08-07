@@ -121,7 +121,7 @@ string* initialize_level(const char* filename, int &width, int &height, float &h
         //need to use cout since this is a c++ style string
         cout << lMatrix[i] << endl;
     }
-    float player_x, player_y;
+    float player_x{}, player_y{};
     for (int i = 0; i < height; i++) {
         int s_coord = lMatrix[i].find_first_of('S');
         if (s_coord != -1) {
