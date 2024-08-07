@@ -22,7 +22,7 @@ const int BOXES = 3;
 
 #define DEBUG_MODE false
 
-#define TEST_MODE true
+#define TEST_MODE false
 
 void parse(char* filename_, vector<Circle*>& circles, vector<Line*>& lines, vector<Box*>& boxes) {
 
