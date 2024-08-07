@@ -1,0 +1,9 @@
+Circles: 1
+# ID : center_x center_y radius
+0 : 3.554537 1.105158 0.686235
+Lines: 1
+# ID : x1 y1 x2 y2
+1 : 6.202219 0.694126 6.168529 4.467423
+Boxes: 1
+# ID : center_x center_y width height
+2 : 3.98003 2.36617 1.241691 1.393987
