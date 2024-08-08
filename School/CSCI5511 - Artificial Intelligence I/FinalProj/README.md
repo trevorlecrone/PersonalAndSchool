@@ -1,0 +1,2 @@
+# Inference Minesweeper solver
+Minesweeper solver that only applies inference methods in solving board. Doesn't use any probabilistic techniques. Example gamelog provided. Original MinesweeperGame source code is not mine, and is credited in the file. I made adjustments to integrate it with the agent and log properly.
