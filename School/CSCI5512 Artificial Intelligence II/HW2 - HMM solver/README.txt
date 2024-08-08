@@ -2,7 +2,7 @@ Name: Trevor LeCrone
 
 Determines likelyhoods of different queries on a provided Hidden Markov Model:
 
-
+![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/HMM.PNG?raw=true)
 ------------------------------
 Running python files:
 
