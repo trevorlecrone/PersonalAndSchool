@@ -2,7 +2,7 @@ Name: Trevor LeCrone
 
 Uses a Gibbs sampler to evaluates probability "Rain" in the provided network:
 
-![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Network.PNG?raw=true)
+![alt text](https://github.com/trevorlecrone/PersonalAndSchool/blob/main/DemoImagesAndVideos/Network.PNG)
 
 Running GibbsRain.py:
 
