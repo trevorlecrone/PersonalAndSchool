@@ -1,11 +1,11 @@
 #pragma once
-#include "SolidSurface.h"
+#include "Surface.h"
 
-class FTriangle : public SolidSurface
+class BVHTriangle : public Surface
 {
 
 public:
-    FTriangle() : v1(Vec(-0.5,0,0)), v2(Vec(0.5,0,0)), v3(Vec(0,1,0)) {
+    BVHTriangle() : v1(Vec(-0.5,0,0)), v2(Vec(0.5,0,0)), v3(Vec(0,1,0)) {
         Vec dVec1 = (v3 - v1).Normalize();
         Vec dVec2 = (v2 - v1).Normalize();
         center = Vec(0, 0, 0);
@@ -15,7 +15,7 @@ public:
         }
     };
 
-    FTriangle(Vec v1_, Vec v2_, Vec v3_, Vec origin, Material mat) : SolidSurface(origin, mat), v1(v1_), v2(v2_), v3(v3_) {
+    BVHTriangle(Vec v1_, Vec v2_, Vec v3_, Vec origin) : Surface(origin), v1(v1_), v2(v2_), v3(v3_) {
         Vec dVec1 = (v3 - v1);
         Vec dVec2 = (v2 - v1);
         normal = dVec1 % dVec2;
@@ -25,7 +25,6 @@ public:
     };
 
     virtual double CheckCollision(Ray ray);
-    virtual bool CheckShadow(Ray ray, double offset, double max_t);
     virtual Vec GetNormal(Vec point) { return normal.Normalize(); };
     bool BaryCheck(Vec point);
 

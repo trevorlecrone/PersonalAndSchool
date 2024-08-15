@@ -29,7 +29,7 @@ public:
     Vec ambient;
     Vec* vertices;
     Vec* normals;
-    std::vector<Surface*> objects;
+    std::vector<SolidSurface*> objects;
     std::vector<Light*> lights;
     char out_file[1024];
 };

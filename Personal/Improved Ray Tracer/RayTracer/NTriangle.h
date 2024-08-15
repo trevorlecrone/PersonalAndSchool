@@ -1,8 +1,8 @@
 #pragma once
-#include "Surface.h"
+#include "SolidSurface.h"
 //Triangle with normals assigned to each vertex
 
-class NTriangle : public Surface
+class NTriangle : public SolidSurface
 {
 
 public:
@@ -11,7 +11,7 @@ public:
         Vec dVec2 = (v2 - v1).Normalize();
     };
 
-    NTriangle(Vec v1_, Vec v2_, Vec v3_, Vec n1_, Vec n2_, Vec n3_, Vec origin, Material mat) : Surface(origin, mat), v1(v1_), v2(v2_), v3(v3_), n1(n1_), n2(n2_), n3(n3_) {
+    NTriangle(Vec v1_, Vec v2_, Vec v3_, Vec n1_, Vec n2_, Vec n3_, Vec origin, Material mat) : SolidSurface(origin, mat), v1(v1_), v2(v2_), v3(v3_), n1(n1_), n2(n2_), n3(n3_) {
         Vec dVec1 = (v3 - v1);
         Vec dVec2 = (v2 - v1);
         pNorm = dVec1 % dVec2;

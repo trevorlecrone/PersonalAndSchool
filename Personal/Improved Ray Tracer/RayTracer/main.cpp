@@ -405,7 +405,7 @@ void main(int argc, char** argv) {
     }
     if (p_success == 1) {
         auto t1 = std::chrono::high_resolution_clock::now();
-        vector<Surface*> shapes = scene.objects;
+        vector<SolidSurface*> shapes = scene.objects;
         vector<Light*> lights = scene.lights;
         Camera camera = scene.camera;
         Vec bg = scene.bg;
@@ -420,7 +420,7 @@ void main(int argc, char** argv) {
         Vec s_normal;
         Material s_mat;
         int s_index;
-        Surface *p;
+        SolidSurface*p;
         double fpz = compute_fp_z(camera.angle, height, camera.position.Z());
         HitData h;
         #pragma omp parallel for schedule(dynamic)

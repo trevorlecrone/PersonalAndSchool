@@ -51,6 +51,21 @@
     <ClCompile Include="SLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SolidSurface.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BVHTriangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RecPrism.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BVHNode.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BVHLeaf.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ray.h">
@@ -105,6 +120,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BVHTriangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RecPrism.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

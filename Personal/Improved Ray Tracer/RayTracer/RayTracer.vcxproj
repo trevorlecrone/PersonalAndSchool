@@ -120,6 +120,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BVHLeaf.h" />
+    <ClCompile Include="BVHNode.h" />
+    <ClCompile Include="BVHTriangle.cpp" />
     <ClCompile Include="DLight.cpp" />
     <ClCompile Include="FTriangle.cpp" />
     <ClCompile Include="image.cpp" />
@@ -129,11 +132,14 @@
     <ClCompile Include="pixel.cpp" />
     <ClCompile Include="PLight.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="RecPrism.cpp" />
     <ClCompile Include="SLight.cpp" />
+    <ClCompile Include="SolidSurface.h" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BVHTriangle.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DLight.h" />
     <ClInclude Include="FTriangle.h" />
@@ -145,6 +151,7 @@
     <ClInclude Include="pixel.h" />
     <ClInclude Include="PLight.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="RecPrism.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SLight.h" />
     <ClInclude Include="Sphere.h" />
