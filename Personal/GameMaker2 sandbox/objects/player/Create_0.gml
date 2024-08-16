@@ -1,4 +1,5 @@
 /// @description Initialize variables and collision
+//Speed and Physics constants
 standardMoveSpeed = 2;
 fastMoveSpeed = 4;
 moveSpeed = standardMoveSpeed;
@@ -9,6 +10,7 @@ impulseX = 0;
 dashImpulse = 0;
 terminalV = 5;
 fastTerminalV = 15;
+gpTerminalV = 20;
 grav = 0.3;
 vertSpeed = 0;
 maxFloorJumpSteps = 12;
@@ -26,7 +28,9 @@ ignoreGrav = false;
 wallJumpSide = 0;
 grounded = false;
 hasDash = true;
-dashing = false
+dashing = false;
+groundPound = false;
+canBreak = false;
 
 
 //collision info
@@ -34,6 +38,8 @@ var coll = layer_get_id("coll");
 collTiles = layer_tilemap_get_id(coll);
 var jumpThroughColl = layer_get_id("jumpThroughColl");
 jumpThroughCollTiles = layer_tilemap_get_id(jumpThroughColl);
+var breakableColl = layer_get_id("breakableColl");
+breakableCollTiles = layer_tilemap_get_id(breakableColl);
 
 //Sprite info
 spriteBoundingLeft = sprite_get_bbox_left(sprite_index) - sprite_get_xoffset(sprite_index);
