@@ -1,0 +1,9 @@
+D:\Godot\POC\.mono\temp\obj\Debug\POC.csproj.AssemblyReference.cache
+D:\Godot\POC\.mono\temp\obj\Debug\POC.GeneratedMSBuildEditorConfig.editorconfig
+D:\Godot\POC\.mono\temp\obj\Debug\POC.AssemblyInfoInputs.cache
+D:\Godot\POC\.mono\temp\obj\Debug\POC.AssemblyInfo.cs
+D:\Godot\POC\.mono\temp\obj\Debug\POC.csproj.CoreCompileInputs.cache
+D:\Godot\POC\.mono\temp\bin\Debug\POC.dll
+D:\Godot\POC\.mono\temp\bin\Debug\POC.pdb
+D:\Godot\POC\.mono\temp\obj\Debug\POC.dll
+D:\Godot\POC\.mono\temp\obj\Debug\POC.pdb

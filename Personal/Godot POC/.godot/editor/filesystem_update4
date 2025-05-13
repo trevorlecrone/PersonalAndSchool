@@ -1,0 +1,9 @@
+res://default_env.tres
+res://Guy.tscn
+res://Level.tscn
+res://Scripts/Guy.cs
+res://Scripts/Sword.cs
+res://Scripts/Health.cs
+res://Scripts/HitboxNode.cs
+res://Scripts/Item.cs
+res://Enemy.tscn

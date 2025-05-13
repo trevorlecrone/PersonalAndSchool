@@ -1,0 +1,17 @@
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.csproj.AssemblyReference.cache
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.GeneratedMSBuildEditorConfig.editorconfig
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.AssemblyInfoInputs.cache
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.AssemblyInfo.cs
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.csproj.CoreCompileInputs.cache
+D:\Godot\4.3\POC\.godot\mono\temp\bin\Debug\POC.deps.json
+D:\Godot\4.3\POC\.godot\mono\temp\bin\Debug\POC.runtimeconfig.json
+D:\Godot\4.3\POC\.godot\mono\temp\bin\Debug\POC.dll
+D:\Godot\4.3\POC\.godot\mono\temp\bin\Debug\POC.pdb
+D:\Godot\4.3\POC\.godot\mono\temp\bin\Debug\GodotSharp.dll
+D:\Godot\4.3\POC\.godot\mono\temp\bin\Debug\GodotSharpEditor.dll
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.csproj.CopyComplete
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.dll
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\refint\POC.dll
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.pdb
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\POC.genruntimeconfig.cache
+D:\Godot\4.3\POC\.godot\mono\temp\obj\Debug\ref\POC.dll

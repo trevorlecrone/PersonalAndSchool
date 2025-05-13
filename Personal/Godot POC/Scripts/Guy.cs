@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-public class Guy : KinematicBody2D
+public partial class Guy : CharacterBody2D
 {
 	// Animation Objects
 	public AnimationTree _animationTree;
@@ -14,17 +14,16 @@ public class Guy : KinematicBody2D
 	// Movement
 	[Export] public int Speed = 200;
 	[Export] public int FastSpeed = 400;
-	private Vector2 velocity = new Vector2();
 	private List<int> movementPressedBuffer = new List<int>();
 
 	//Actions
 	private List<int> actionBuffer = new List<int>();
 	[Export] public int AttackFrames = 33;
 	[Export] public int AttackInterruptibleAfter = 22;
-	private int currentAttackFrame = 0;
+	private int currentActionFrame = 0;
 	private bool inAttack = false;
 	private bool interruptible = false;
-	[Export] public List<string> immuneGroups = new List<string>();
+	public List<string> immuneGroups = new List<string>();
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -36,48 +35,48 @@ public class Guy : KinematicBody2D
 	
 	public void HandleMovement()
 	{
-		velocity = new Vector2();
+		Velocity = new Vector2();
 		if (!inAttack || interruptible)
 		{
 			if (Input.IsActionPressed("right") && movementPressedBuffer[0] == 0)
 			{
-				velocity.x = 1;
+				Velocity = Vector2.Right;
 			}
 			if (Input.IsActionPressed("left") && movementPressedBuffer[0] == 1)
 			{
-				velocity.x = -1;
+				Velocity = Vector2.Left;
 			}
 			if (Input.IsActionPressed("down") && movementPressedBuffer[0] == 2)
 			{
-				velocity.y = 1;
+				Velocity = Vector2.Down;
 			}
 			if (Input.IsActionPressed("up") && movementPressedBuffer[0] == 3)
 			{
-				velocity.y = -1;
+				Velocity = Vector2.Up;
 			}
-			velocity = velocity.Normalized() * Speed;
+			Velocity = Velocity.Normalized() * Speed;
 		}
 	}
-	public void StartAttack()
+	public void StartAction(Item i)
 	{
 		var direction = _animationTree.Get("parameters/Idle/blend_position");
-		_animationTree.Set("parameters/Sword/blend_position", direction);
+		_animationTree.Set($"parameters/{i.AnimationPrefix}/blend_position", direction);
 		_animationStateMachine.Stop();
-		_animationStateMachine.Start("Sword");
-		currentAttackFrame = 0;
-		velocity = new Vector2();
+		_animationStateMachine.Start(i.AnimationPrefix);
+		currentActionFrame = 0;
+		Velocity = new Vector2();
 		inAttack = true;
 		interruptible = false;
 	}
 
-	public void HandleAttack()
+	public void HandleAction(Item i)
 	{
-		currentAttackFrame++;
-		if(currentAttackFrame == AttackInterruptibleAfter)
+		currentActionFrame++;
+		if(currentActionFrame == i.InterruptibleAfterFrames)
 		{
 			interruptible = true;
 		}
-		if(currentAttackFrame == AttackFrames)
+		if(currentActionFrame == i.ActiveFrames)
 		{
 			inAttack = false;
 		}
@@ -87,7 +86,7 @@ public class Guy : KinematicBody2D
 	{
 		HandleMovement();
 		if(inAttack) {
-			HandleAttack();
+			HandleAction(GetNode<Sword>("Sword"));
 		}
 	}
 
@@ -113,7 +112,7 @@ public class Guy : KinematicBody2D
 		{
 			if (!inAttack || (inAttack && interruptible))
 			{
-				StartAttack();
+				StartAction(GetNode<Sword>("Sword"));
 			}
 		}
 
@@ -137,18 +136,18 @@ public class Guy : KinematicBody2D
 		// GD.Print(String.Join(", ", movementPressedBuffer));
 	}
 
-	public override void _PhysicsProcess(float delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		HandleCharacter();
-		if(velocity.Length() > 0.0) {
+		if(Velocity.Length() > 0.0) {
 			_animationStateMachine.Travel("Walk");
-			_animationTree.Set("parameters/Idle/blend_position", velocity);
-			_animationTree.Set("parameters/Walk/blend_position", velocity);
+			_animationTree.Set("parameters/Idle/blend_position", Velocity);
+			_animationTree.Set("parameters/Walk/blend_position", Velocity);
 		}
 		else if (!inAttack){
 			_animationStateMachine.Travel("Idle");
 		}
-		MoveAndSlide(velocity);
+		MoveAndSlide();
 		
 	}
 }

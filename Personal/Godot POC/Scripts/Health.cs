@@ -1,14 +1,15 @@
 using Godot;
 using System;
 
-public class Health : Node2D
+[GlobalClass]
+public partial class Health : Node2D
 {
 	// Declare member variables here. Examples:
 	// private int a = 2;
 	// private string b = "text";
 	
-	[Export] public int BaseMax = 12;
-	[Export] public int BonusMax = 4;
+	[Export] public int BaseMax;
+	[Export] public int BonusMax;
 	public int current = 0;
 
 	// Called when the node enters the scene tree for the first time.
@@ -20,7 +21,9 @@ public class Health : Node2D
 	public void Damage(int damage)
 	{
 		current -= damage;
+		GD.Print("Health Damage");
 		if(current <= 0) {
+			GD.Print("dead");
 			this.GetParent().QueueFree();
 		}
 	}
