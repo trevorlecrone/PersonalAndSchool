@@ -13,13 +13,13 @@ public class Protag : IControllable
 {
 
     // Animation Objects
-    private Dictionary<(Direction, bool), Sprite> spriteTree;
-    private Sprite currentSprite;
+    private Dictionary<(Direction, bool), AnimatedSprite> spriteTree = new Dictionary<(Direction, bool), AnimatedSprite>();
+    private AnimatedSprite currentSprite;
 
     // Movement
     public Vector2 Position;
-	public int Speed = 200;
-	public int FastSpeed = 400;
+	public const int Speed = 5;
+	public const int FastSpeed = 7;
     public bool Sprint = false;
     public Direction Facing = Direction.DOWN;
     private bool facingLocked = false;
@@ -27,12 +27,19 @@ public class Protag : IControllable
 
     //Actions
 	private List<int> actionBuffer = new List<int>();
-	public int AttackFrames = 33;
-	public int AttackInterruptibleAfter = 22;
+	public const int AttackFrames = 33;
+	public const int AttackInterruptibleAfter = 22;
 	private int currentActionFrame = 0;
 	private bool inAttack = false;
 	private bool interruptible = false;
 	public List<string> ImmuneGroups = new List<string>();
+
+    public Protag (TextureAtlas atlas, Vector2 position)
+    {
+        this.ConstructSpriteTree(atlas);
+        this.Position = position;
+        this.currentSprite = this.spriteTree[(Direction.DOWN, false)];
+    }
 
     public void CheckKeyboardInput()
 	{
@@ -89,34 +96,33 @@ public class Protag : IControllable
 		{
 			if (this.movementPressedBuffer.Count > 0)
             {
-                this.EvaluateFacingAndVelocity_KeyBoard(velocity);
+                velocity = this.EvaluateFacingAndVelocity_KeyBoard(velocity, keyboard);
             }
             this.Position = this.Position + velocity;
             this.currentSprite = this.spriteTree[(this.Facing, velocity.Length() > 0)];
 		}
 	}
 
-    private void EvaluateFacingAndVelocity_KeyBoard(Vector2 velocity)
+    private Vector2 EvaluateFacingAndVelocity_KeyBoard(Vector2 velocity, KeyboardInfo keyboard)
 	{
-        KeyboardInfo keyboard = Core.Input.Keyboard;
-        if (this.movementPressedBuffer.Count < 2)
+        if (this.movementPressedBuffer.Count < 2 || (int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] == 1 || (int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] == 5)
 		{
 			if (keyboard.IsKeyDown(Keys.W) && this.movementPressedBuffer[0] == Direction.UP)
 			{
 				velocity.Y = -1;
                 this.Facing = Direction.UP;
 			}
-			if (keyboard.IsKeyDown(Keys.S) && this.movementPressedBuffer[0] == Direction.DOWN)
+			else if (keyboard.IsKeyDown(Keys.S) && this.movementPressedBuffer[0] == Direction.DOWN)
 			{
 				velocity.Y = 1;
                 this.Facing = Direction.DOWN;
 			}
-            if (keyboard.IsKeyDown(Keys.A) && this.movementPressedBuffer[0] == Direction.LEFT)
+            else if (keyboard.IsKeyDown(Keys.A) && this.movementPressedBuffer[0] == Direction.LEFT)
 			{
 				velocity.X = -1;
                 this.Facing = Direction.LEFT;
 			}
-            if (keyboard.IsKeyDown(Keys.D) && this.movementPressedBuffer[0] == Direction.RIGHT)
+            else if (keyboard.IsKeyDown(Keys.D) && this.movementPressedBuffer[0] == Direction.RIGHT)
 			{
 				velocity.X = 1;
                 this.Facing = Direction.RIGHT;
@@ -156,22 +162,32 @@ public class Protag : IControllable
                 this.Facing = velocity.Y > 0 ? Direction.DOWN : Direction.UP;
             }
 		}
+        else
+        {
+            
+        }
+        return velocity;
 
 	}
 
     private void ConstructSpriteTree(TextureAtlas atlas)
     {
-        this.spriteTree.Add((Direction.UP, false), atlas.CreateSprite("up-1"));
+        this.spriteTree.Add((Direction.UP, false), atlas.CreateAnimatedSprite("idle-up"));
         this.spriteTree.Add((Direction.UP, true), atlas.CreateAnimatedSprite("walk-up"));
-        this.spriteTree.Add((Direction.DOWN, false), atlas.CreateSprite("down-1"));
+        this.spriteTree.Add((Direction.DOWN, false), atlas.CreateAnimatedSprite("idle-down"));
         this.spriteTree.Add((Direction.DOWN, true), atlas.CreateAnimatedSprite("walk-down"));
-        this.spriteTree.Add((Direction.LEFT, false), atlas.CreateSprite("left-1"));
-        this.spriteTree.Add((Direction.LEFT, true), atlas.CreateSprite("walk-left"));
-        this.spriteTree.Add((Direction.RIGHT, false), atlas.CreateSprite("right-1"));
+        this.spriteTree.Add((Direction.LEFT, false), atlas.CreateAnimatedSprite("idle-left"));
+        this.spriteTree.Add((Direction.LEFT, true), atlas.CreateAnimatedSprite("walk-left"));
+        this.spriteTree.Add((Direction.RIGHT, false), atlas.CreateAnimatedSprite("idle-right"));
         this.spriteTree.Add((Direction.RIGHT, true), atlas.CreateAnimatedSprite("walk-right"));
     }
 
-    public void Draw(SpriteBatch sb, Vector2 position)
+    public void Update(GameTime gameTime)
+    {
+        this.currentSprite.Update(gameTime);
+    }
+
+    public void Draw(SpriteBatch sb)
     {
         this.currentSprite.Draw(sb, this.Position);
     }
