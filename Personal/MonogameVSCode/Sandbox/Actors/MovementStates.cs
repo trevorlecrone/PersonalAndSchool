@@ -1,12 +1,12 @@
 namespace Sandbox;
-public enum movementStates
+public enum MovementStates
 {
     IDLE_UP,
     IDLE_DOWN,
-    IDLE_RIGHT,
     IDLE_LEFT,
+    IDLE_RIGHT,
     WALK_UP,
     WALK_DOWN,
-    WALK_RIGHT,
     WALK_LEFT,
+    WALK_RIGHT,
 }

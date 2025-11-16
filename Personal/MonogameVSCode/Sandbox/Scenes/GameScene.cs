@@ -328,29 +328,29 @@ public class GameScene : Scene
             speed *= 1.5f;
         }
 
-        // If the W or Up keys are down, move the slime up on the screen.
-        if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
-        {
-            _slimePosition.Y -= speed;
-        }
+        // // If the W or Up keys are down, move the slime up on the screen.
+        // if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
+        // {
+        //     _slimePosition.Y -= speed;
+        // }
 
-        // if the S or Down keys are down, move the slime down on the screen.
-        if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
-        {
-            _slimePosition.Y += speed;
-        }
+        // // if the S or Down keys are down, move the slime down on the screen.
+        // if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
+        // {
+        //     _slimePosition.Y += speed;
+        // }
 
-        // If the A or Left keys are down, move the slime left on the screen.
-        if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
-        {
-            _slimePosition.X -= speed;
-        }
+        // // If the A or Left keys are down, move the slime left on the screen.
+        // if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
+        // {
+        //     _slimePosition.X -= speed;
+        // }
 
-        // If the D or Right keys are down, move the slime right on the screen.
-        if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
-        {
-            _slimePosition.X += speed;
-        }
+        // // If the D or Right keys are down, move the slime right on the screen.
+        // if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
+        // {
+        //     _slimePosition.X += speed;
+        // }
 
         // If the M key is pressed, toggle mute state for audio.
         if (keyboard.KeyPressed(Keys.M))
