@@ -1,9 +1,11 @@
 using System;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
+using MonoGameLibrary.Collision;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Input;
 using MonoGameLibrary.Scenes;
@@ -35,6 +37,12 @@ public class GameScene : Scene
 
     // Defines the bounds of the room that the slime and bat are contained within.
     private Rectangle _roomBounds;
+
+    // Defines the top of the room
+    private CollisionRectangle _roomTop;
+
+    // Defines the top of the room
+    private CollisionChecker _collisionChecker;
 
     // The sound effect to play when the bat bounces off the edge of the screen.
     private SoundEffect _bounceSoundEffect;
@@ -71,11 +79,27 @@ public class GameScene : Scene
             screenBounds.Width - (int)_tilemap.TileWidth * 2,
             screenBounds.Height - (int)_tilemap.TileHeight * 2
         );
+        _roomTop = new CollisionRectangle(
+            new CollisionGroups() | CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionProperties.BLOCKING,
+            new Vector2(640, 40),
+            80,
+            1160,
+            (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
+            2
+        );
+
+        _collisionChecker = new CollisionChecker();
+
+        _collisionChecker.CollisionRects.Add(_roomTop);
 
         // Initial slime position will be the center tile of the tile map.
         int centerRow = _tilemap.Rows / 2;
         int centerColumn = _tilemap.Columns / 2;
         _protag.Position = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeight);
+        _protag.Hitbox.Anchor = _protag.Position;
+
+        _collisionChecker.CollisionRects.Add(_protag.Hitbox);
 
         // Initial bat position will the in the top left corner of the room.
         _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
@@ -120,8 +144,6 @@ public class GameScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-        // Update the slime animated sprite.
-        _protag.Update(gameTime);
 
         // Update the bat animated sprite.
         _bat.Update(gameTime);
@@ -132,6 +154,11 @@ public class GameScene : Scene
 
         // Check for gamepad input and handle it.
         CheckGamePadInput();
+
+        _collisionChecker.DetectCollisions();
+
+        // Update the slime animated sprite.
+        _protag.Update(gameTime);
 
         // TODO: MOVE COLLISION CHECK INTO SOME KIND OF OBJECT/HELPER
         // Circle slimeBounds = new Circle(

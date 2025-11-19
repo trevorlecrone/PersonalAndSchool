@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
+using MonoGameLibrary.Collision;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Input;
 
@@ -15,13 +17,19 @@ public class Protag : IControllable
     // Animation Objects
     private Dictionary<(Direction, bool), AnimatedSprite> spriteTree = new Dictionary<(Direction, bool), AnimatedSprite>();
     private AnimatedSprite currentSprite;
+    public int Height;
+    public int Width;
 
     // Movement
     public Vector2 Position;
+    public Vector2 Velocity;
 	public const int Speed = 5;
 	public const int FastSpeed = 7;
     public bool Sprint = false;
     public Direction Facing = Direction.DOWN;
+    public CollisionProperties CollisionProperties = new CollisionProperties() | CollisionProperties.TAKESDAMAGE | CollisionProperties.BLOCKING;
+    public CollisionGroups CollisionGroups = new CollisionGroups() | CollisionGroups.GROUNDED;
+    public CollisionRectangle Hitbox = new CollisionRectangle(1);
     private bool facingLocked = false;
 	private List<Direction> movementPressedBuffer = new List<Direction>();
 
@@ -39,6 +47,16 @@ public class Protag : IControllable
         this.ConstructSpriteTree(atlas);
         this.Position = position;
         this.currentSprite = this.spriteTree[(Direction.DOWN, false)];
+        this.Height = (int)this.currentSprite.Height;
+        this.Width = (int)this.currentSprite.Width;
+        this.Hitbox = new CollisionRectangle(
+            this.CollisionGroups,
+            this.CollisionProperties,
+            this.Position,
+            this.Height,
+            this.Width,
+            this.HandleCollision,
+            1);
     }
 
     public void CheckKeyboardInput()
@@ -91,84 +109,87 @@ public class Protag : IControllable
 
     public void HandleMovement(KeyboardInfo keyboard)
 	{
-		var velocity = new Vector2();
+		this.Velocity = new Vector2();
 		if (!inAttack || interruptible)
 		{
 			if (this.movementPressedBuffer.Count > 0)
             {
-                velocity = this.EvaluateFacingAndVelocity_KeyBoard(velocity, keyboard);
+                this.EvaluateFacingAndVelocity_KeyBoard(keyboard);
             }
-            this.Position = this.Position + velocity;
-            this.currentSprite = this.spriteTree[(this.Facing, velocity.Length() > 0)];
+            this.Position = this.Position + this.Velocity;
+            this.Hitbox.Anchor = this.Position;
+            this.currentSprite = this.spriteTree[(this.Facing, this.Velocity.Length() > 0)];
 		}
 	}
 
-    private Vector2 EvaluateFacingAndVelocity_KeyBoard(Vector2 velocity, KeyboardInfo keyboard)
+    private void EvaluateFacingAndVelocity_KeyBoard(KeyboardInfo keyboard)
 	{
         if (this.movementPressedBuffer.Count < 2 || (int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] == 1 || (int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] == 5)
 		{
 			if (keyboard.IsKeyDown(Keys.W) && this.movementPressedBuffer[0] == Direction.UP)
 			{
-				velocity.Y = -1;
+				this.Velocity.Y = -1;
                 this.Facing = Direction.UP;
 			}
 			else if (keyboard.IsKeyDown(Keys.S) && this.movementPressedBuffer[0] == Direction.DOWN)
 			{
-				velocity.Y = 1;
+				this.Velocity.Y = 1;
                 this.Facing = Direction.DOWN;
 			}
             else if (keyboard.IsKeyDown(Keys.A) && this.movementPressedBuffer[0] == Direction.LEFT)
 			{
-				velocity.X = -1;
+				this.Velocity.X = -1;
                 this.Facing = Direction.LEFT;
 			}
             else if (keyboard.IsKeyDown(Keys.D) && this.movementPressedBuffer[0] == Direction.RIGHT)
 			{
-				velocity.X = 1;
+				this.Velocity.X = 1;
                 this.Facing = Direction.RIGHT;
 			}
-			velocity.Normalize();
-            velocity *= Speed;
+			this.Velocity.Normalize();
+            this.Velocity *= Speed;
 		}
         // first two items in buffer are not up & down or left and right
         else if ((int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] != 1 && (int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] != 5)
 		{
 			if (keyboard.IsKeyDown(Keys.W) && (this.movementPressedBuffer[0] == Direction.UP || this.movementPressedBuffer[1] == Direction.UP))
 			{
-				velocity.Y = -1;
+				this.Velocity.Y = -1;
 			}
 			if (keyboard.IsKeyDown(Keys.S) && (this.movementPressedBuffer[0] == Direction.DOWN || this.movementPressedBuffer[1] == Direction.DOWN))
 			{
-				velocity.Y = 1;
+				this.Velocity.Y = 1;
 			}
             if (keyboard.IsKeyDown(Keys.A) && (this.movementPressedBuffer[0] == Direction.LEFT || this.movementPressedBuffer[1] == Direction.LEFT))
 			{
-				velocity.X = -1;
+				this.Velocity.X = -1;
 			}
             if (keyboard.IsKeyDown(Keys.D) && (this.movementPressedBuffer[0] == Direction.RIGHT || this.movementPressedBuffer[1] == Direction.RIGHT))
 			{
-				velocity.X = 1;
+				this.Velocity.X = 1;
 			}
-			velocity.Normalize();
-            velocity *= Speed;
+			this.Velocity.Normalize();
+            this.Velocity *= Speed;
 
             //el-ifs so we only evaluate once
-            if(this.Facing == Direction.UP && velocity.Y > 0 || this.Facing == Direction.DOWN && velocity.Y < 0)
+            if(this.Facing == Direction.UP && this.Velocity.Y > 0 || this.Facing == Direction.DOWN && this.Velocity.Y < 0)
             {
-                this.Facing = velocity.X > 0 ? Direction.RIGHT : Direction.LEFT;
+                this.Facing = this.Velocity.X > 0 ? Direction.RIGHT : Direction.LEFT;
             }
-            else if((this.Facing == Direction.RIGHT && velocity.X < 0) || this.Facing == Direction.LEFT && velocity.X > 0)
+            else if((this.Facing == Direction.RIGHT && this.Velocity.X < 0) || this.Facing == Direction.LEFT && this.Velocity.X > 0)
             {
-                this.Facing = velocity.Y > 0 ? Direction.DOWN : Direction.UP;
+                this.Facing = this.Velocity.Y > 0 ? Direction.DOWN : Direction.UP;
             }
 		}
-        else
-        {
-            
-        }
-        return velocity;
-
 	}
+
+    private void HandleCollision(CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width)
+    {
+        if(colP.HasFlag(CollisionProperties.BLOCKING)){
+            this.Position = CollisionUtil.HandleBlocking(this.Hitbox, this.Velocity, anchor, height, width);
+            this.Hitbox.Anchor = this.Position;
+        }
+    }
 
     private void ConstructSpriteTree(TextureAtlas atlas)
     {
@@ -185,6 +206,7 @@ public class Protag : IControllable
     public void Update(GameTime gameTime)
     {
         this.currentSprite.Update(gameTime);
+        this.Hitbox.Anchor = this.Position;
     }
 
     public void Draw(SpriteBatch sb)
