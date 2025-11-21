@@ -19,33 +19,34 @@ public static class CollisionUtil
 
         if(r.Top() <= blockBottom && r.Bottom() > blockBottom)
         {
-            magY = blockBottom - r.Top();
+            magY = Math.Abs(blockBottom - r.Top());
         }
         else if(r.Bottom() >= blockTop && r.Top() < blockTop)
         {
-            magY = r.Bottom() - blockTop;
+            magY = Math.Abs(r.Bottom() - blockTop);
         }
 
         if(r.Left() <= blockRight && r.Right() > blockRight)
         {
-            magX = blockRight - r.Left();
+            magX = Math.Abs(blockRight - r.Left());
         }
         else if(r.Right() >= blockLeft && r.Left() < blockLeft)
         {
-            magX = r.Right() - blockLeft;
+            magX = Math.Abs(r.Right() - blockLeft);
         }
 
-        var velocityScalar = 1.0f;
         Vector2 correction = velocity * -1;
-        if(magX > magY && (velocity.X * velocity.X) > 0)
+
+        float velocityScalar;
+        if ((magX < magY && magX > 0) || (magX > magY && magY == 0))
         {
-            velocityScalar = magX/velocity.X * 1.05f;
+            velocityScalar = magX / velocity.X * 1.05f;
             velocityScalar *= velocityScalar > 0 ? -1 : 1;
             correction = new Vector2(velocity.X * velocityScalar, 0.0f);
         }
         else if ((velocity.Y * velocity.Y) > 0)
         {
-            velocityScalar = magY/velocity.Y * 1.05f;
+            velocityScalar = magY / velocity.Y * 1.05f;
             velocityScalar *= velocityScalar > 0 ? -1 : 1;
             correction = new Vector2(0.0f, velocity.Y * velocityScalar);
 

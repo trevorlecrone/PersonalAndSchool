@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,9 +19,6 @@ public class GameScene : Scene
     // Defines the bat animated sprite.
     private AnimatedSprite _bat;
 
-    // Tracks the position of the slime.
-    private Vector2 _protagPosition;
-
     // Speed multiplier when moving.
     private const float MOVEMENT_SPEED = 5.0f;
 
@@ -41,7 +37,16 @@ public class GameScene : Scene
     // Defines the top of the room
     private CollisionRectangle _roomTop;
 
-    // Defines the top of the room
+    // Defines the bottom of the room
+    private CollisionRectangle _roomBottom;
+
+    // Defines the left of the room
+    private CollisionRectangle _roomLeft;
+
+    // Defines the right of the room
+    private CollisionRectangle _roomRight;
+
+    // the CollisionChecker
     private CollisionChecker _collisionChecker;
 
     // The sound effect to play when the bat bounces off the edge of the screen.
@@ -89,9 +94,42 @@ public class GameScene : Scene
             2
         );
 
+        _roomBottom = new CollisionRectangle(
+            new CollisionGroups() | CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionProperties.BLOCKING,
+            new Vector2(640, 650),
+            80,
+            1160,
+            (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
+            3
+        );
+
+        _roomLeft = new CollisionRectangle(
+            new CollisionGroups() | CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionProperties.BLOCKING,
+            new Vector2(0, 360),
+            560,
+            80,
+            (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
+            5
+        );
+
+        _roomRight = new CollisionRectangle(
+            new CollisionGroups() | CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionProperties.BLOCKING,
+            new Vector2(1220, 360),
+            560,
+            80,
+            (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
+            4
+        );
+
         _collisionChecker = new CollisionChecker();
 
         _collisionChecker.CollisionRects.Add(_roomTop);
+        _collisionChecker.CollisionRects.Add(_roomBottom);
+        _collisionChecker.CollisionRects.Add(_roomLeft);
+        _collisionChecker.CollisionRects.Add(_roomRight);
 
         // Initial slime position will be the center tile of the tile map.
         int centerRow = _tilemap.Rows / 2;
@@ -113,7 +151,7 @@ public class GameScene : Scene
         _scoreTextOrigin = new Vector2(0, scoreTextYOrigin);
 
         // Assign the initial random velocity to the bat.
-        AssignRandomBatVelocity();
+        _batVelocity = AssignRandomBatVelocity();
     }
 
     public override void LoadContent()
@@ -122,7 +160,7 @@ public class GameScene : Scene
         TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition.xml");
 
         // Create the slime animated sprite from the atlas.
-        _protag = new Protag(atlas, _protagPosition);
+        _protag = new Protag(atlas, new Vector2());
 
         // Create the bat animated sprite from the atlas.
         _bat = atlas.CreateAnimatedSprite("bat-animation");
@@ -160,33 +198,6 @@ public class GameScene : Scene
         // Update the slime animated sprite.
         _protag.Update(gameTime);
 
-        // TODO: MOVE COLLISION CHECK INTO SOME KIND OF OBJECT/HELPER
-        // Circle slimeBounds = new Circle(
-        //     (int)(_slimePosition.X + (_slime.Width * 0.5f)),
-        //     (int)(_slimePosition.Y + (_slime.Height * 0.5f)),
-        //     (int)(_slime.Width * 0.5f)
-        // );
-
-        // // Use distance based checks to determine if the slime is within the
-        // // bounds of the game screen, and if it is outside that screen edge,
-        // // move it back inside.
-        // if (slimeBounds.Left < _roomBounds.Left)
-        // {
-        //     _slimePosition.X = _roomBounds.Left;
-        // }
-        // else if (slimeBounds.Right > _roomBounds.Right)
-        // {
-        //     _slimePosition.X = _roomBounds.Right - _slime.Width;
-        // }
-
-        // if (slimeBounds.Top < _roomBounds.Top)
-        // {
-        //     _slimePosition.Y = _roomBounds.Top;
-        // }
-        // else if (slimeBounds.Bottom > _roomBounds.Bottom)
-        // {
-        //     _slimePosition.Y = _roomBounds.Bottom - _slime.Height;
-        // }
 
         // Calculate the new position of the bat based on the velocity.
         Vector2 newBatPosition = _batPosition + _batVelocity;
@@ -260,7 +271,7 @@ public class GameScene : Scene
         // }
     }
 
-    private void AssignRandomBatVelocity()
+    private Vector2 AssignRandomBatVelocity()
     {
         // Generate a random angle.
         float angle = (float)(Random.Shared.NextDouble() * Math.PI * 2);
@@ -271,7 +282,7 @@ public class GameScene : Scene
         Vector2 direction = new Vector2(x, y);
 
         // Multiply the direction vector by the movement speed
-        _batVelocity = direction * MOVEMENT_SPEED;
+        return direction * MOVEMENT_SPEED;
     }
 
     private void CheckSystemKeyboardInput()
@@ -291,69 +302,6 @@ public class GameScene : Scene
         {
             speed *= 1.5f;
         }
-
-        // If the M key is pressed, toggle mute state for audio.
-        if (keyboard.KeyPressed(Keys.M))
-        {
-            Core.Audio.ToggleMute();
-        }
-
-        // If the + button is pressed, increase the volume.
-        if (keyboard.KeyPressed(Keys.OemPlus))
-        {
-            Core.Audio.SongVolume += 0.1f;
-            Core.Audio.SoundEffectVolume += 0.1f;
-        }
-
-        // If the - button was pressed, decrease the volume.
-        if (keyboard.KeyPressed(Keys.OemMinus))
-        {
-            Core.Audio.SongVolume -= 0.1f;
-            Core.Audio.SoundEffectVolume -= 0.1f;
-        }
-    }
-
-    private void CheckKeyboardInput()
-    {
-        // Get a reference to the keyboard inof
-        KeyboardInfo keyboard = Core.Input.Keyboard;
-
-        // If the escape key is pressed, return to the title screen.
-        if (Core.Input.Keyboard.KeyPressed(Keys.Escape))
-        {
-            Core.ChangeScene(new TitleScene());
-        }
-
-        // If the space key is held down, the movement speed increases by 1.5
-        float speed = MOVEMENT_SPEED;
-        if (keyboard.IsKeyDown(Keys.Space))
-        {
-            speed *= 1.5f;
-        }
-
-        // // If the W or Up keys are down, move the slime up on the screen.
-        // if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
-        // {
-        //     _slimePosition.Y -= speed;
-        // }
-
-        // // if the S or Down keys are down, move the slime down on the screen.
-        // if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
-        // {
-        //     _slimePosition.Y += speed;
-        // }
-
-        // // If the A or Left keys are down, move the slime left on the screen.
-        // if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
-        // {
-        //     _slimePosition.X -= speed;
-        // }
-
-        // // If the D or Right keys are down, move the slime right on the screen.
-        // if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
-        // {
-        //     _slimePosition.X += speed;
-        // }
 
         // If the M key is pressed, toggle mute state for audio.
         if (keyboard.KeyPressed(Keys.M))

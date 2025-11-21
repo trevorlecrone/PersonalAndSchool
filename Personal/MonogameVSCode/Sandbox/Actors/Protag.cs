@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,11 +23,13 @@ public class Protag : IControllable
     public Vector2 Velocity;
 	public const int Speed = 5;
 	public const int FastSpeed = 7;
+   
     public bool Sprint = false;
     public Direction Facing = Direction.DOWN;
-    public CollisionProperties CollisionProperties = new CollisionProperties() | CollisionProperties.TAKESDAMAGE | CollisionProperties.BLOCKING;
+    public CollisionProperties CollisionProperties = new CollisionProperties() | CollisionProperties.BLOCKING;
     public CollisionGroups CollisionGroups = new CollisionGroups() | CollisionGroups.GROUNDED;
     public CollisionRectangle Hitbox = new CollisionRectangle(1);
+     private const int damageImpulse = 7;
     private bool facingLocked = false;
 	private List<Direction> movementPressedBuffer = new List<Direction>();
 
@@ -37,7 +37,11 @@ public class Protag : IControllable
 	private List<int> actionBuffer = new List<int>();
 	public const int AttackFrames = 33;
 	public const int AttackInterruptibleAfter = 22;
+    private const int courtesyFrames = 10;
+    private const int damageImpulseFrames = 3;
 	private int currentActionFrame = 0;
+    private int CurrentImpuseFrame = 0;
+    private int currentCourtesyFrame = 22;
 	private bool inAttack = false;
 	private bool interruptible = false;
 	public List<string> ImmuneGroups = new List<string>();
@@ -189,6 +193,10 @@ public class Protag : IControllable
             this.Position = CollisionUtil.HandleBlocking(this.Hitbox, this.Velocity, anchor, height, width);
             this.Hitbox.Anchor = this.Position;
         }
+        if(colP.HasFlag(CollisionProperties.DOESDAMGETOPROTAG)){
+            //this.Velocity = this.Position - anchor * damageImpulse;
+            //this.currentCourtesyFrame = 0;
+        }
     }
 
     private void ConstructSpriteTree(TextureAtlas atlas)
@@ -205,6 +213,10 @@ public class Protag : IControllable
 
     public void Update(GameTime gameTime)
     {
+        if(this.currentCourtesyFrame < courtesyFrames)
+        {
+            this.currentCourtesyFrame ++;
+        }
         this.currentSprite.Update(gameTime);
         this.Hitbox.Anchor = this.Position;
     }
