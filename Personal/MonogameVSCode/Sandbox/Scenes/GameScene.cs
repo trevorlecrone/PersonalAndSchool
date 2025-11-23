@@ -13,20 +13,14 @@ namespace Sandbox.Scenes;
 
 public class GameScene : Scene
 {
-    // Defines the slime animated sprite.
+    // Defines the Protagonist
     private Protag _protag;
 
     // Defines the bat animated sprite.
-    private AnimatedSprite _bat;
+    private Bat _bat;
 
     // Speed multiplier when moving.
     private const float MOVEMENT_SPEED = 5.0f;
-
-    // Tracks the position of the bat.
-    private Vector2 _batPosition;
-
-    // Tracks the velocity of the bat.
-    private Vector2 _batVelocity;
 
     // Defines the tilemap to draw.
     private Tilemap _tilemap;
@@ -84,8 +78,9 @@ public class GameScene : Scene
             screenBounds.Width - (int)_tilemap.TileWidth * 2,
             screenBounds.Height - (int)_tilemap.TileHeight * 2
         );
+        
         _roomTop = new CollisionRectangle(
-            new CollisionGroups() | CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
             new Vector2(640, 40),
             80,
@@ -95,7 +90,7 @@ public class GameScene : Scene
         );
 
         _roomBottom = new CollisionRectangle(
-            new CollisionGroups() | CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
             new Vector2(640, 650),
             80,
@@ -105,7 +100,7 @@ public class GameScene : Scene
         );
 
         _roomLeft = new CollisionRectangle(
-            new CollisionGroups() | CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
             new Vector2(0, 360),
             560,
@@ -115,9 +110,9 @@ public class GameScene : Scene
         );
 
         _roomRight = new CollisionRectangle(
-            new CollisionGroups() | CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
-            new Vector2(1220, 360),
+            new Vector2(1212, 360),
             560,
             80,
             (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
@@ -131,7 +126,7 @@ public class GameScene : Scene
         _collisionChecker.CollisionRects.Add(_roomLeft);
         _collisionChecker.CollisionRects.Add(_roomRight);
 
-        // Initial slime position will be the center tile of the tile map.
+        // Initial protagonist position will be the center tile of the tile map.
         int centerRow = _tilemap.Rows / 2;
         int centerColumn = _tilemap.Columns / 2;
         _protag.Position = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeight);
@@ -140,7 +135,7 @@ public class GameScene : Scene
         _collisionChecker.CollisionRects.Add(_protag.Hitbox);
 
         // Initial bat position will the in the top left corner of the room.
-        _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
+        _bat.Position = new Vector2(_roomLeft.Right() + 100, _roomTop.Bottom() + 100);
 
         // Set the position of the score text to align to the left edge of the
         // room bounds, and to vertically be at the center of the first tile.
@@ -150,8 +145,9 @@ public class GameScene : Scene
         float scoreTextYOrigin = _font.MeasureString("Score").Y * 0.5f;
         _scoreTextOrigin = new Vector2(0, scoreTextYOrigin);
 
-        // Assign the initial random velocity to the bat.
-        _batVelocity = AssignRandomBatVelocity();
+        _bat.AssignRandomVelocity();
+
+        _collisionChecker.CollisionRects.Add(_bat.Hitbox);
     }
 
     public override void LoadContent()
@@ -163,8 +159,7 @@ public class GameScene : Scene
         _protag = new Protag(atlas, new Vector2());
 
         // Create the bat animated sprite from the atlas.
-        _bat = atlas.CreateAnimatedSprite("bat-animation");
-        _bat.Scale = new Vector2(4.0f, 4.0f);
+        _bat = new Bat(atlas, new Vector2());
 
         // Create the tilemap from the XML configuration file.
         _tilemap = Tilemap.FromFile(Content, "images/tilemap-definition.xml");
@@ -183,7 +178,7 @@ public class GameScene : Scene
     public override void Update(GameTime gameTime)
     {
 
-        // Update the bat animated sprite.
+        // Update the bat.
         _bat.Update(gameTime);
 
         // Check for keyboard input and handle it.
@@ -195,60 +190,53 @@ public class GameScene : Scene
 
         _collisionChecker.DetectCollisions();
 
-        // Update the slime animated sprite.
+        // Update the protagonist.
         _protag.Update(gameTime);
 
 
-        // Calculate the new position of the bat based on the velocity.
-        Vector2 newBatPosition = _batPosition + _batVelocity;
+        // // Calculate the new position of the bat based on the velocity.
+        // Vector2 newBatPosition = _batPosition + _batVelocity;
 
-        // Create a bounding circle for the bat.
-        Circle batBounds = new Circle(
-            (int)(newBatPosition.X + (_bat.Width * 0.5f)),
-            (int)(newBatPosition.Y + (_bat.Height * 0.5f)),
-            (int)(_bat.Width * 0.5f)
-        );
+        // Vector2 normal = Vector2.Zero;
 
-        Vector2 normal = Vector2.Zero;
+        // // Use distance based checks to determine if the bat is within the
+        // // bounds of the game screen, and if it is outside that screen edge,
+        // // reflect it about the screen edge normal.
+        // if (batBounds.Left < _roomBounds.Left)
+        // {
+        //     normal.X = Vector2.UnitX.X;
+        //     newBatPosition.X = _roomBounds.Left;
+        // }
+        // else if (batBounds.Right > _roomBounds.Right)
+        // {
+        //     normal.X = -Vector2.UnitX.X;
+        //     newBatPosition.X = _roomBounds.Right - _bat.Width;
+        // }
 
-        // Use distance based checks to determine if the bat is within the
-        // bounds of the game screen, and if it is outside that screen edge,
-        // reflect it about the screen edge normal.
-        if (batBounds.Left < _roomBounds.Left)
-        {
-            normal.X = Vector2.UnitX.X;
-            newBatPosition.X = _roomBounds.Left;
-        }
-        else if (batBounds.Right > _roomBounds.Right)
-        {
-            normal.X = -Vector2.UnitX.X;
-            newBatPosition.X = _roomBounds.Right - _bat.Width;
-        }
+        // if (batBounds.Top < _roomBounds.Top)
+        // {
+        //     normal.Y = Vector2.UnitY.Y;
+        //     newBatPosition.Y = _roomBounds.Top;
+        // }
+        // else if (batBounds.Bottom > _roomBounds.Bottom)
+        // {
+        //     normal.Y = -Vector2.UnitY.Y;
+        //     newBatPosition.Y = _roomBounds.Bottom - _bat.Height;
+        // }
 
-        if (batBounds.Top < _roomBounds.Top)
-        {
-            normal.Y = Vector2.UnitY.Y;
-            newBatPosition.Y = _roomBounds.Top;
-        }
-        else if (batBounds.Bottom > _roomBounds.Bottom)
-        {
-            normal.Y = -Vector2.UnitY.Y;
-            newBatPosition.Y = _roomBounds.Bottom - _bat.Height;
-        }
+        // // If the normal is anything but Vector2.Zero, this means the bat had
+        // // moved outside the screen edge so we should reflect it about the
+        // // normal.
+        // if (normal != Vector2.Zero)
+        // {
+        //     normal.Normalize();
+        //     _batVelocity = Vector2.Reflect(_batVelocity, normal);
 
-        // If the normal is anything but Vector2.Zero, this means the bat had
-        // moved outside the screen edge so we should reflect it about the
-        // normal.
-        if (normal != Vector2.Zero)
-        {
-            normal.Normalize();
-            _batVelocity = Vector2.Reflect(_batVelocity, normal);
+        //     // Play the bounce sound effect.
+        //     Core.Audio.PlaySoundEffect(_bounceSoundEffect);
+        // }
 
-            // Play the bounce sound effect.
-            Core.Audio.PlaySoundEffect(_bounceSoundEffect);
-        }
-
-        _batPosition = newBatPosition;
+        // _batPosition = newBatPosition;
 
         // if (slimeBounds.Intersects(batBounds))
         // {
@@ -271,19 +259,7 @@ public class GameScene : Scene
         // }
     }
 
-    private Vector2 AssignRandomBatVelocity()
-    {
-        // Generate a random angle.
-        float angle = (float)(Random.Shared.NextDouble() * Math.PI * 2);
-
-        // Convert angle to a direction vector.
-        float x = (float)Math.Cos(angle);
-        float y = (float)Math.Sin(angle);
-        Vector2 direction = new Vector2(x, y);
-
-        // Multiply the direction vector by the movement speed
-        return direction * MOVEMENT_SPEED;
-    }
+    
 
     private void CheckSystemKeyboardInput()
     {
@@ -359,7 +335,7 @@ public class GameScene : Scene
         _protag.Draw(Core.SpriteBatch);
 
         // Draw the bat sprite.
-        _bat.Draw(Core.SpriteBatch, _batPosition);
+        _bat.Draw(Core.SpriteBatch);
 
         // Draw the score.
         Core.SpriteBatch.DrawString(
@@ -377,8 +353,4 @@ public class GameScene : Scene
         // Always end the sprite batch when finished.
         Core.SpriteBatch.End();
     }
-
-
-
-
 }

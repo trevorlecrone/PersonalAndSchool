@@ -29,7 +29,7 @@ public class Protag : IControllable
     public CollisionProperties CollisionProperties = new CollisionProperties() | CollisionProperties.BLOCKING;
     public CollisionGroups CollisionGroups = new CollisionGroups() | CollisionGroups.GROUNDED;
     public CollisionRectangle Hitbox = new CollisionRectangle(1);
-     private const int damageImpulse = 7;
+     private const int damageImpulse = 10;
     private bool facingLocked = false;
 	private List<Direction> movementPressedBuffer = new List<Direction>();
 
@@ -37,11 +37,11 @@ public class Protag : IControllable
 	private List<int> actionBuffer = new List<int>();
 	public const int AttackFrames = 33;
 	public const int AttackInterruptibleAfter = 22;
-    private const int courtesyFrames = 10;
-    private const int damageImpulseFrames = 3;
+    private const int courtesyFrames = 44;
+    private const int damageImpulseFrames = 10;
 	private int currentActionFrame = 0;
-    private int CurrentImpuseFrame = 0;
-    private int currentCourtesyFrame = 22;
+    private int currentImpuseFrame = damageImpulseFrames;
+    private int currentCourtesyFrame = courtesyFrames;
 	private bool inAttack = false;
 	private bool interruptible = false;
 	public List<string> ImmuneGroups = new List<string>();
@@ -108,7 +108,9 @@ public class Protag : IControllable
            this.movementPressedBuffer.Remove(Direction.RIGHT);
         }
 
-        this.HandleMovement(keyboard);
+        if(this.currentImpuseFrame >= damageImpulseFrames) {
+            this.HandleMovement(keyboard);
+        }
 	}
 
     public void HandleMovement(KeyboardInfo keyboard)
@@ -194,9 +196,16 @@ public class Protag : IControllable
             this.Hitbox.Anchor = this.Position;
         }
         if(colP.HasFlag(CollisionProperties.DOESDAMGETOPROTAG)){
-            //this.Velocity = this.Position - anchor * damageImpulse;
-            //this.currentCourtesyFrame = 0;
+            if (this.currentCourtesyFrame == courtesyFrames)
+            {
+                this.currentCourtesyFrame = 0;
+                this.currentImpuseFrame = 0;
+                this.Velocity = this.Position - anchor;
+                this.Velocity.Normalize();
+                this.Velocity *= damageImpulse;
+            }
         }
+        return;
     }
 
     private void ConstructSpriteTree(TextureAtlas atlas)
@@ -216,6 +225,11 @@ public class Protag : IControllable
         if(this.currentCourtesyFrame < courtesyFrames)
         {
             this.currentCourtesyFrame ++;
+        }
+        if(this.currentImpuseFrame < courtesyFrames)
+        {
+            this.currentImpuseFrame ++;
+            this.Position += this.Velocity;
         }
         this.currentSprite.Update(gameTime);
         this.Hitbox.Anchor = this.Position;
