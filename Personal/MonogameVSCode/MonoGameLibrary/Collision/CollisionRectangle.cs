@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using MonoGameLibrary.Graphics;
 namespace MonoGameLibrary.Collision;
 
 public class CollisionRectangle : ICollidable
@@ -7,6 +8,7 @@ public class CollisionRectangle : ICollidable
     public CollisionGroups CollisionGroups { get; set; }
     public CollisionProperties CollisionProperties { get; set; }
     public Vector2 Anchor { get; set; }
+    public Sprite DebugSprite;
 
     public Action<CollisionGroups, CollisionProperties, Vector2, int, int> OnCollide { get; set; }
     public int Height;
@@ -20,6 +22,7 @@ public class CollisionRectangle : ICollidable
         this.Anchor = new Vector2();
         this.Height = 1;
         this.Width = 1;
+        this.DebugSprite = new Sprite(DebugConsts.DEBUG_WHITE);
         this.OnCollide = (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; };
         this.Id = _id;
     }
@@ -36,8 +39,11 @@ public class CollisionRectangle : ICollidable
         this.CollisionGroups = _collisionGroups;
         this.CollisionProperties = _collisionProperties;
         this.Anchor = _anchor;
-        this. Height = _height;
+        this.Height = _height;
         this.Width = _width;
+        this.DebugSprite = new Sprite(DebugConsts.DEBUG_WHITE);
+        this.DebugSprite.Scale = new Vector2(this.Width, this.Height);
+        this.DebugSprite.Color = Color.Blue * 0.5f;
         this.OnCollide = _onCollide;
         this.Id = _id;
     }

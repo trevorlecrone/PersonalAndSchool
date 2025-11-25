@@ -123,7 +123,7 @@ public class Protag : IControllable
                 this.EvaluateFacingAndVelocity_KeyBoard(keyboard);
             }
             this.Position = this.Position + this.Velocity;
-            this.Hitbox.Anchor = this.Position;
+            this.Hitbox.Anchor = this.Center();
             this.currentSprite = this.spriteTree[(this.Facing, this.Velocity.Length() > 0)];
 		}
 	}
@@ -192,8 +192,8 @@ public class Protag : IControllable
     private void HandleCollision(CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width)
     {
         if(colP.HasFlag(CollisionProperties.BLOCKING)){
-            this.Position = CollisionUtil.HandleBlocking(this.Hitbox, this.Velocity, anchor, height, width);
-            this.Hitbox.Anchor = this.Position;
+            this.Position += CollisionUtil.HandleBlocking(this.Hitbox, this.Velocity, anchor, height, width);
+            this.Hitbox.Anchor = this.Center();
         }
         if(colP.HasFlag(CollisionProperties.DOESDAMGETOPROTAG)){
             if (this.currentCourtesyFrame == courtesyFrames)
@@ -232,12 +232,17 @@ public class Protag : IControllable
             this.Position += this.Velocity;
         }
         this.currentSprite.Update(gameTime);
-        this.Hitbox.Anchor = this.Position;
+        this.Hitbox.Anchor = this.Center();
     }
 
     public void Draw(SpriteBatch sb)
     {
         this.currentSprite.Draw(sb, this.Position);
+    }
+
+    public Vector2 Center()
+    {
+        return new Vector2(this.Position.X + this.Width/2, this.Position.Y + this.Height/2);
     }
 
     public void CheckGamepadInput()

@@ -53,11 +53,12 @@ public class Bat
      private void HandleCollision(CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width)
     {
         if(colP.HasFlag(CollisionProperties.BLOCKING) && colG.HasFlag(CollisionGroups.AIRBORN)){
-            this.Position = CollisionUtil.HandleBlocking(this.Hitbox, this.Velocity, anchor, height, width);
-            Vector2 normal = this.Position - this.Hitbox.Anchor;
-            normal.Normalize();
-            this.Velocity = Vector2.Reflect(Velocity, normal);
-            this.Hitbox.Anchor = this.Position;
+            var correction = CollisionUtil.HandleBlocking(this.Hitbox, this.Velocity, anchor, height, width);
+            this.Position += correction;
+            // use correction as normal vector we reflect over
+            correction.Normalize();
+            this.Velocity = Vector2.Reflect(Velocity, correction);
+            this.Hitbox.Anchor = this.Center();
         }
     }
 
@@ -72,7 +73,12 @@ public class Bat
     {
         this.Position += this.Velocity;
         this.sprite.Update(gameTime);
-        this.Hitbox.Anchor = this.Position;
+        this.Hitbox.Anchor = this.Center();
+    }
+
+    public Vector2 Center()
+    {
+        return new Vector2(this.Position.X + this.Width/2, this.Position.Y + this.Height/2);
     }
 
     public void Draw(SpriteBatch sb)

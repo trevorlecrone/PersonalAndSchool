@@ -61,6 +61,8 @@ public class GameScene : Scene
     // Defines the origin used when drawing the score text.
     private Vector2 _scoreTextOrigin;
 
+    private bool DEBUG = true;
+
     public override void Initialize()
     {
         // LoadContent is called during base.Initialize().
@@ -82,7 +84,7 @@ public class GameScene : Scene
         _roomTop = new CollisionRectangle(
             CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
-            new Vector2(640, 40),
+            new Vector2(640, 80),
             80,
             1160,
             (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
@@ -92,7 +94,7 @@ public class GameScene : Scene
         _roomBottom = new CollisionRectangle(
             CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
-            new Vector2(640, 650),
+            new Vector2(640, 680),
             80,
             1160,
             (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
@@ -102,7 +104,7 @@ public class GameScene : Scene
         _roomLeft = new CollisionRectangle(
             CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
-            new Vector2(0, 360),
+            new Vector2(40, 360),
             560,
             80,
             (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
@@ -112,7 +114,7 @@ public class GameScene : Scene
         _roomRight = new CollisionRectangle(
             CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
-            new Vector2(1212, 360),
+            new Vector2(1240, 360),
             560,
             80,
             (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
@@ -349,6 +351,14 @@ public class GameScene : Scene
             SpriteEffects.None, // effects
             0.0f                // layerDepth
         );
+
+        if(DEBUG)
+        {
+            foreach (var colR in _collisionChecker.CollisionRects)
+            {
+                colR.DebugSprite.Draw(Core.SpriteBatch, new Vector2(colR.Left(), colR.Top()));
+            }
+        }
 
         // Always end the sprite batch when finished.
         Core.SpriteBatch.End();
