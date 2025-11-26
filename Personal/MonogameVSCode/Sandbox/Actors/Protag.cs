@@ -22,6 +22,8 @@ public class Protag : IControllable
     public Vector2 Position;
     public Vector2 Velocity;
 	public const int Speed = 5;
+    private Vector2 impulseVel;
+
 	public const int FastSpeed = 7;
    
     public bool Sprint = false;
@@ -38,9 +40,9 @@ public class Protag : IControllable
 	public const int AttackFrames = 33;
 	public const int AttackInterruptibleAfter = 22;
     private const int courtesyFrames = 44;
-    private const int damageImpulseFrames = 10;
+    private const int damageImpulseFrames = 8;
 	private int currentActionFrame = 0;
-    private int currentImpuseFrame = damageImpulseFrames;
+    private int currentImpulseFrame = damageImpulseFrames;
     private int currentCourtesyFrame = courtesyFrames;
 	private bool inAttack = false;
 	private bool interruptible = false;
@@ -50,6 +52,7 @@ public class Protag : IControllable
     {
         this.ConstructSpriteTree(atlas);
         this.Position = position;
+        this.Velocity = new Vector2(0,0);
         this.currentSprite = this.spriteTree[(Direction.DOWN, false)];
         this.Height = (int)this.currentSprite.Height;
         this.Width = (int)this.currentSprite.Width;
@@ -108,20 +111,13 @@ public class Protag : IControllable
            this.movementPressedBuffer.Remove(Direction.RIGHT);
         }
 
-        if(this.currentImpuseFrame >= damageImpulseFrames) {
-            this.HandleMovement(keyboard);
-        }
+        this.EvaluateFacingAndVelocity_KeyBoard(keyboard);
 	}
 
-    public void HandleMovement(KeyboardInfo keyboard)
+    public void HandleMovement()
 	{
-		this.Velocity = new Vector2();
 		if (!inAttack || interruptible)
 		{
-			if (this.movementPressedBuffer.Count > 0)
-            {
-                this.EvaluateFacingAndVelocity_KeyBoard(keyboard);
-            }
             this.Position = this.Position + this.Velocity;
             this.Hitbox.Anchor = this.Center();
             this.currentSprite = this.spriteTree[(this.Facing, this.Velocity.Length() > 0)];
@@ -130,63 +126,71 @@ public class Protag : IControllable
 
     private void EvaluateFacingAndVelocity_KeyBoard(KeyboardInfo keyboard)
 	{
+        var inputVel = new Vector2(0,0);
         if (this.movementPressedBuffer.Count < 2 || (int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] == 1 || (int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] == 5)
 		{
 			if (keyboard.IsKeyDown(Keys.W) && this.movementPressedBuffer[0] == Direction.UP)
 			{
-				this.Velocity.Y = -1;
+				inputVel.Y = -1;
                 this.Facing = Direction.UP;
 			}
 			else if (keyboard.IsKeyDown(Keys.S) && this.movementPressedBuffer[0] == Direction.DOWN)
 			{
-				this.Velocity.Y = 1;
+				inputVel.Y = 1;
                 this.Facing = Direction.DOWN;
 			}
             else if (keyboard.IsKeyDown(Keys.A) && this.movementPressedBuffer[0] == Direction.LEFT)
 			{
-				this.Velocity.X = -1;
+				inputVel.X = -1;
                 this.Facing = Direction.LEFT;
 			}
             else if (keyboard.IsKeyDown(Keys.D) && this.movementPressedBuffer[0] == Direction.RIGHT)
 			{
-				this.Velocity.X = 1;
+				inputVel.X = 1;
                 this.Facing = Direction.RIGHT;
 			}
-			this.Velocity.Normalize();
-            this.Velocity *= Speed;
+            if(inputVel.Length() > 0){
+                inputVel.Normalize();
+                inputVel *= Speed;
+            }
 		}
         // first two items in buffer are not up & down or left and right
         else if ((int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] != 1 && (int)this.movementPressedBuffer[0] + (int)this.movementPressedBuffer[1] != 5)
 		{
 			if (keyboard.IsKeyDown(Keys.W) && (this.movementPressedBuffer[0] == Direction.UP || this.movementPressedBuffer[1] == Direction.UP))
 			{
-				this.Velocity.Y = -1;
+				inputVel.Y = -1;
 			}
 			if (keyboard.IsKeyDown(Keys.S) && (this.movementPressedBuffer[0] == Direction.DOWN || this.movementPressedBuffer[1] == Direction.DOWN))
 			{
-				this.Velocity.Y = 1;
+				inputVel.Y = 1;
 			}
             if (keyboard.IsKeyDown(Keys.A) && (this.movementPressedBuffer[0] == Direction.LEFT || this.movementPressedBuffer[1] == Direction.LEFT))
 			{
-				this.Velocity.X = -1;
+				inputVel.X = -1;
 			}
             if (keyboard.IsKeyDown(Keys.D) && (this.movementPressedBuffer[0] == Direction.RIGHT || this.movementPressedBuffer[1] == Direction.RIGHT))
 			{
-				this.Velocity.X = 1;
+				inputVel.X = 1;
 			}
-			this.Velocity.Normalize();
-            this.Velocity *= Speed;
+			if(inputVel.Length() > 0){
+                inputVel.Normalize();
+                inputVel *= Speed;
+            }
 
             //el-ifs so we only evaluate once
-            if(this.Facing == Direction.UP && this.Velocity.Y > 0 || this.Facing == Direction.DOWN && this.Velocity.Y < 0)
+            if(this.Facing == Direction.UP && inputVel.Y > 0 || this.Facing == Direction.DOWN && inputVel.Y < 0)
             {
-                this.Facing = this.Velocity.X > 0 ? Direction.RIGHT : Direction.LEFT;
+                this.Facing = inputVel.X > 0 ? Direction.RIGHT : Direction.LEFT;
             }
-            else if((this.Facing == Direction.RIGHT && this.Velocity.X < 0) || this.Facing == Direction.LEFT && this.Velocity.X > 0)
+            else if((this.Facing == Direction.RIGHT && inputVel.X < 0) || this.Facing == Direction.LEFT && inputVel.X > 0)
             {
-                this.Facing = this.Velocity.Y > 0 ? Direction.DOWN : Direction.UP;
+                this.Facing = inputVel.Y > 0 ? Direction.DOWN : Direction.UP;
             }
 		}
+
+        this.Velocity = inputVel;
+        
 	}
 
     private void HandleCollision(CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width)
@@ -199,10 +203,10 @@ public class Protag : IControllable
             if (this.currentCourtesyFrame == courtesyFrames)
             {
                 this.currentCourtesyFrame = 0;
-                this.currentImpuseFrame = 0;
-                this.Velocity = this.Position - anchor;
-                this.Velocity.Normalize();
-                this.Velocity *= damageImpulse;
+                this.currentImpulseFrame = 0;
+                this.impulseVel = this.Position - anchor;
+                this.impulseVel.Normalize();
+                this.impulseVel *= damageImpulse;
             }
         }
         return;
@@ -224,13 +228,18 @@ public class Protag : IControllable
     {
         if(this.currentCourtesyFrame < courtesyFrames)
         {
-            this.currentCourtesyFrame ++;
+            this.currentCourtesyFrame++;
         }
-        if(this.currentImpuseFrame < courtesyFrames)
+        if(this.currentImpulseFrame < damageImpulseFrames)
         {
-            this.currentImpuseFrame ++;
-            this.Position += this.Velocity;
+            this.Velocity += this.impulseVel;
+            this.currentImpulseFrame++;
         }
+        else
+        {
+            this.impulseVel = new Vector2(0,0);
+        }
+        this.HandleMovement();
         this.currentSprite.Update(gameTime);
         this.Hitbox.Anchor = this.Center();
     }
