@@ -11,6 +11,18 @@
         <Region name="down-1" x="384" y="0" width="64" height="64" />
         <Region name="down-2" x="448" y="0" width="64" height="64" />
         <Region name="down-3" x="512" y="0" width="64" height="64" />
+        <Region name="jump-right-1" x="0" y="320" width="64" height="64" />
+        <Region name="jump-right-2" x="64" y="320" width="64" height="64" />
+        <Region name="jump-right-3" x="128" y="320" width="64" height="64" />
+        <Region name="jump-up-1" x="192" y="320" width="64" height="64" />
+        <Region name="jump-up-2" x="256" y="320" width="64" height="64" />
+        <Region name="jump-up-3" x="320" y="320" width="64" height="64" />
+        <Region name="jump-left-1" x="384" y="320" width="64" height="64" />
+        <Region name="jump-left-2" x="448" y="320" width="64" height="64" />
+        <Region name="jump-left-3" x="512" y="320" width="64" height="64" />
+        <Region name="jump-down-1" x="0" y="382" width="64" height="64" />
+        <Region name="jump-down-2" x="64" y="382" width="64" height="64" />
+        <Region name="jump-down-3" x="128" y="382" width="64" height="64" />
         <Region name="bat-1" x="576" y="0" width="20" height="20" />
         <Region name="bat-2" x="596" y="0" width="20" height="20" />
         <Region name="bat-3" x="576" y="20" width="20" height="20" />
@@ -44,6 +56,26 @@
         </Animation>
         <Animation name="idle-down" delay="200">
             <Frame region="down-3" />
+        </Animation>
+        <Animation name="jump-right" delay="200">
+            <Frame region="jump-right-1" />
+            <Frame region="jump-right-2" />
+            <Frame region="jump-right-3" />
+        </Animation>
+        <Animation name="jump-up" delay="200">
+            <Frame region="jump-up-1" />
+            <Frame region="jump-up-2" />
+            <Frame region="jump-up-3" />
+        </Animation>
+        <Animation name="jump-left" delay="200">
+            <Frame region="jump-left-1" />
+            <Frame region="jump-left-2" />
+            <Frame region="jump-left-3" />
+        </Animation>
+        <Animation name="jump-down" delay="200">
+            <Frame region="jump-down-1" />
+            <Frame region="jump-down-2" />
+            <Frame region="jump-down-3" />
         </Animation>
         <Animation name="bat-animation" delay="200">
             <Frame region="bat-1" />
