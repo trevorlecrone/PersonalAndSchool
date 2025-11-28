@@ -23,7 +23,7 @@
         <Region name="jump-down-1" x="0" y="382" width="64" height="64" />
         <Region name="jump-down-2" x="64" y="382" width="64" height="64" />
         <Region name="jump-down-3" x="128" y="382" width="64" height="64" />
-        <Region name="bat-1" x="576" y="0" width="20" height="20" />
+        <Region name="bat-1" x="576" y="0" width="19" height="14" />
         <Region name="bat-2" x="596" y="0" width="20" height="20" />
         <Region name="bat-3" x="576" y="20" width="20" height="20" />
         <Region name="debug-white" x="650" y="0" width="1" height="1" />
@@ -80,6 +80,7 @@
         <Animation name="bat-animation" delay="200">
             <Frame region="bat-1" />
             <Frame region="bat-2" />
+            <Frame region="bat-1" />
             <Frame region="bat-3" />
         </Animation>
     </Animations>

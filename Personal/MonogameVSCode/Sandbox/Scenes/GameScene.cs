@@ -179,21 +179,20 @@ public class GameScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-
-        // Update the bat.
-        _bat.Update(gameTime);
-
         // Check for keyboard input and handle it.
         CheckSystemKeyboardInput();
-        _protag.CheckKeyboardInput();
 
         // Check for gamepad input and handle it.
-        CheckGamePadInput();
+        // CheckGamePadInput();
+        
+        // Update the protagonist.
+        _protag.CheckKeyboardInput();
+        _protag.Update(gameTime);
 
         _collisionChecker.DetectCollisions();
 
-        // Update the protagonist.
-        _protag.Update(gameTime);
+        // Update the bat.
+        _bat.Update(gameTime);
 
     }
 
@@ -208,13 +207,6 @@ public class GameScene : Scene
         if (Core.Input.Keyboard.KeyPressed(Keys.Escape))
         {
             Core.ChangeScene(new TitleScene());
-        }
-
-        // If the space key is held down, the movement speed increases by 1.5
-        float speed = MOVEMENT_SPEED;
-        if (keyboard.IsKeyDown(Keys.Space))
-        {
-            speed *= 1.5f;
         }
 
         // If the M key is pressed, toggle mute state for audio.

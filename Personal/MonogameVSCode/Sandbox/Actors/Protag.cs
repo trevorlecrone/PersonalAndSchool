@@ -16,6 +16,7 @@ public class Protag : IControllable
     private Dictionary<(Direction, bool), AnimatedSprite> spriteTree = new Dictionary<(Direction, bool), AnimatedSprite>();
     private Dictionary<Direction, AnimatedSprite> airbornSpriteTree = new Dictionary<Direction, AnimatedSprite>();
     private AnimatedSprite currentSprite;
+    private Vector2 animationOffset = new Vector2(0,0);
     public int Height;
     public int Width;
 
@@ -36,7 +37,7 @@ public class Protag : IControllable
 	private List<Direction> movementPressedBuffer = new List<Direction>();
 
     //Actions
-	private const int jumpFrames = 33;
+	private const int jumpFrames = 30;
 	private const int AttackFrames = 33;
 	private const int AttackInterruptibleAfter = 22;
     private const int courtesyFrames = 44;
@@ -95,7 +96,7 @@ public class Protag : IControllable
         {
            this.movementPressedBuffer.Insert(0, Direction.RIGHT);
         }
-        if (keyboard.KeyPressed(Keys.Space))
+        if (keyboard.KeyPressed(Keys.Space) && this.currentJumpFrame == jumpFrames)
         {
            this.airborn = true;
            this.currentJumpFrame = 0;
@@ -266,11 +267,20 @@ public class Protag : IControllable
 
         if (this.currentJumpFrame < jumpFrames)
         {
+            if (this.currentJumpFrame < 10)
+            {
+                this.animationOffset.Y -= 6;
+            }
+            if (this.currentJumpFrame > 20)
+            {
+                this.animationOffset.Y += 6;
+            }
             this.currentJumpFrame++;
         }
         else
         {
             this.airborn = false;
+            this.animationOffset = new Vector2(0,0);
         }
         
         this.ChooseSprite();
@@ -281,7 +291,7 @@ public class Protag : IControllable
 
     public void Draw(SpriteBatch sb)
     {
-        this.currentSprite.Draw(sb, this.Position);
+        this.currentSprite.Draw(sb, this.Position + this.animationOffset);
     }
 
     public Vector2 Center()

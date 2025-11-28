@@ -34,8 +34,8 @@ public class Bat
             this.CollisionGroups,
             this.CollisionProperties,
             this.Position,
-            this.Height,
-            this.Width,
+            this.Height-10,
+            this.Width-5,
             this.HandleCollision,
             1);
     }
@@ -58,7 +58,7 @@ public class Bat
             // use correction as normal vector we reflect over
             correction.Normalize();
             this.Velocity = Vector2.Reflect(Velocity, correction);
-            this.Hitbox.Anchor = this.Center();
+            this.Hitbox.Anchor = this.HitBoxCenter();
         }
     }
 
@@ -73,12 +73,12 @@ public class Bat
     {
         this.Position += this.Velocity;
         this.sprite.Update(gameTime);
-        this.Hitbox.Anchor = this.Center();
+        this.Hitbox.Anchor = this.HitBoxCenter();
     }
 
-    public Vector2 Center()
+    public Vector2 HitBoxCenter()
     {
-        return new Vector2(this.Position.X + this.Width/2, this.Position.Y + this.Height/2);
+        return new Vector2(this.Position.X + this.Width/2, this.Position.Y + this.Height/2 - 5);
     }
 
     public void Draw(SpriteBatch sb)
