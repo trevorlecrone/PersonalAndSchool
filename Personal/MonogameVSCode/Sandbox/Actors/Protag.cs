@@ -28,6 +28,8 @@ public class Protag : IControllable
     private Vector2 impulseVel;
     public bool Sprint = false;
     public Direction Facing = Direction.DOWN;
+
+    
     public CollisionProperties CollisionProperties = new CollisionProperties() | CollisionProperties.BLOCKING;
     public CollisionGroups CollisionGroups = new CollisionGroups() | CollisionGroups.GROUNDED;
     public CollisionRectangle Hitbox = new CollisionRectangle(1);
@@ -214,7 +216,8 @@ public class Protag : IControllable
 
     private void HandleCollision(CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width)
     {
-        if(colP.HasFlag(CollisionProperties.BLOCKING)){
+        var commonLayer = (this.Hitbox.CollisionGroups & colG).HasFlag(CollisionGroups.GROUNDED) || (this.Hitbox.CollisionGroups & colG).HasFlag(CollisionGroups.AIRBORN);
+        if(colP.HasFlag(CollisionProperties.BLOCKING) && commonLayer){
             this.Position += CollisionUtil.HandleBlocking(this.Hitbox, this.Velocity, anchor, height, width);
             this.Hitbox.Anchor = this.Center();
         }
@@ -276,11 +279,13 @@ public class Protag : IControllable
                 this.animationOffset.Y += 6;
             }
             this.currentJumpFrame++;
+            this.Hitbox.CollisionGroups &= CollisionUtil.groundedMask;
         }
         else
         {
             this.airborn = false;
             this.animationOffset = new Vector2(0,0);
+            this.Hitbox.CollisionGroups |= CollisionGroups.GROUNDED;
         }
         
         this.ChooseSprite();

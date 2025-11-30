@@ -51,4 +51,6 @@ public static class CollisionUtil
 
         return correction;
     }
+
+    public static CollisionGroups groundedMask = ~CollisionGroups.GROUNDED;
 }

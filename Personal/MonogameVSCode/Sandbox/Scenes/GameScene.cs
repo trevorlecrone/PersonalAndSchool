@@ -40,6 +40,9 @@ public class GameScene : Scene
     // Defines the right of the room
     private CollisionRectangle _roomRight;
 
+    // Defines the right of the room
+    private CollisionRectangle _groundedOnly;
+
     // the CollisionChecker
     private CollisionChecker _collisionChecker;
 
@@ -150,6 +153,18 @@ public class GameScene : Scene
         _bat.AssignRandomVelocity();
 
         _collisionChecker.CollisionRects.Add(_bat.Hitbox);
+
+        _groundedOnly = new CollisionRectangle(
+            CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
+            CollisionProperties.BLOCKING,
+            new Vector2(400, 400),
+            80,
+            80,
+            (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
+            9
+        );
+
+         _collisionChecker.CollisionRects.Add(_groundedOnly);
     }
 
     public override void LoadContent()
