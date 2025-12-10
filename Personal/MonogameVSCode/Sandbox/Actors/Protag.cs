@@ -12,55 +12,71 @@ namespace Sandbox;
 public class Protag : IControllable
 {
 
-    // Animation Objects
-    private Dictionary<(Direction, bool), AnimatedSprite> spriteTree = new Dictionary<(Direction, bool), AnimatedSprite>();
-    private Dictionary<Direction, AnimatedSprite> airbornSpriteTree = new Dictionary<Direction, AnimatedSprite>();
-    private AnimatedSprite currentSprite;
-    private Vector2 animationOffset = new Vector2(0,0);
+    //--------Animation Objects-------------
+    // constants
+    
+    // externals
     public int Height;
     public int Width;
 
-    // Movement
+    // internals
+    private Dictionary<(Direction, ProtagState), AnimatedSprite> spriteTree = new Dictionary<(Direction, ProtagState), AnimatedSprite>();
+    private AnimatedSprite CurrentSprite;
+    private ProtagState CurrentState;
+    private Vector2 animationOffset = new Vector2(0,0);
+    private bool facingLocked = false;
+
+    //--------Movement-------------
+    // constants
     public const int Speed = 5;
     public const int FastSpeed = 7;
+
+    // externals
     public Vector2 Position;
     public Vector2 Velocity;
+
+    // internals
     private Vector2 impulseVel;
     public bool Sprint = false;
     public Direction Facing = Direction.DOWN;
 
-    
+    //--------Collision-------------
     public CollisionProperties CollisionProperties = new CollisionProperties() | CollisionProperties.BLOCKING;
     public CollisionGroups CollisionGroups = new CollisionGroups() | CollisionGroups.GROUNDED;
     public CollisionRectangle Hitbox = new CollisionRectangle(1);
-    private const int damageImpulse = 10;
-    private bool facingLocked = false;
-    private bool airborn = false;
+    
+    
 	private List<Direction> movementPressedBuffer = new List<Direction>();
 
-    //Actions
+    //--------Actions-------------
+    // constants
+    private const int damageImpulse = 8;
 	private const int jumpFrames = 30;
-	private const int AttackFrames = 33;
+	private const int AttackFrames = 16;
 	private const int AttackInterruptibleAfter = 22;
     private const int courtesyFrames = 44;
-    private const int damageImpulseFrames = 8;
+    private const int damageImpulseFrames = 10;
+
+    // externals
+    
+    // intenals
 	private int currentActionFrame = 0;
     private int currentImpulseFrame = damageImpulseFrames;
     private int currentCourtesyFrame = courtesyFrames;
     private int currentJumpFrame = jumpFrames;
 	private bool inAttack = false;
 	private bool interruptible = false;
+    private bool resetSprite = false;
     private List<int> actionBuffer = new List<int>();
-	public List<string> ImmuneGroups = new List<string>();
 
     public Protag (TextureAtlas atlas, Vector2 position)
     {
         this.ConstructSpriteTrees(atlas);
         this.Position = position;
         this.Velocity = new Vector2(0,0);
-        this.currentSprite = this.spriteTree[(Direction.DOWN, false)];
-        this.Height = (int)this.currentSprite.Height;
-        this.Width = (int)this.currentSprite.Width;
+        this.CurrentSprite = this.spriteTree[(Direction.DOWN, ProtagState.IDLE)];
+        this.Height = (int)this.CurrentSprite.Height;
+        this.Width = (int)this.CurrentSprite.Width;
         this.Hitbox = new CollisionRectangle(
             this.CollisionGroups,
             this.CollisionProperties,
@@ -100,8 +116,15 @@ public class Protag : IControllable
         }
         if (keyboard.KeyPressed(Keys.Space) && this.currentJumpFrame == jumpFrames)
         {
-           this.airborn = true;
            this.currentJumpFrame = 0;
+           this.Hitbox.CollisionGroups &= CollisionUtil.groundedMask;
+        }
+        if (keyboard.KeyPressed(Keys.E))
+        {
+           this.inAttack = true;
+           this.resetSprite = true;
+           this.currentActionFrame = 0;
+           
         }
 
         if (keyboard.KeyReleased(Keys.W))
@@ -127,7 +150,7 @@ public class Protag : IControllable
 
     public void HandleMovement()
 	{
-		if (!inAttack || interruptible)
+		if (!inAttack)
 		{
             this.Position = this.Position + this.Velocity;
             this.Hitbox.Anchor = this.Center();
@@ -136,13 +159,7 @@ public class Protag : IControllable
 
     public void ChooseSprite()
 	{
-        if(this.airborn)
-        {
-            this.currentSprite = this.airbornSpriteTree[this.Facing];
-            return;
-        }
-
-        this.currentSprite = this.spriteTree[(this.Facing, this.Velocity.Length() > 0)];
+        this.CurrentSprite = this.spriteTree[(this.Facing, this.CurrentState)];
 	}
 
     private void EvaluateFacingAndVelocity_KeyBoard(KeyboardInfo keyboard)
@@ -211,6 +228,7 @@ public class Protag : IControllable
 		}
 
         this.Velocity = inputVel;
+        this.CurrentState = Velocity.Length() > 0 ? ProtagState.MOVING : ProtagState.IDLE;
         
 	}
 
@@ -236,19 +254,25 @@ public class Protag : IControllable
 
     private void ConstructSpriteTrees(TextureAtlas atlas)
     {
-        this.spriteTree.Add((Direction.UP, false), atlas.CreateAnimatedSprite("idle-up"));
-        this.spriteTree.Add((Direction.UP, true), atlas.CreateAnimatedSprite("walk-up"));
-        this.spriteTree.Add((Direction.DOWN, false), atlas.CreateAnimatedSprite("idle-down"));
-        this.spriteTree.Add((Direction.DOWN, true), atlas.CreateAnimatedSprite("walk-down"));
-        this.spriteTree.Add((Direction.LEFT, false), atlas.CreateAnimatedSprite("idle-left"));
-        this.spriteTree.Add((Direction.LEFT, true), atlas.CreateAnimatedSprite("walk-left"));
-        this.spriteTree.Add((Direction.RIGHT, false), atlas.CreateAnimatedSprite("idle-right"));
-        this.spriteTree.Add((Direction.RIGHT, true), atlas.CreateAnimatedSprite("walk-right"));
+        this.spriteTree.Add((Direction.UP, ProtagState.IDLE), atlas.CreateAnimatedSprite("idle-up"));
+        this.spriteTree.Add((Direction.DOWN, ProtagState.IDLE), atlas.CreateAnimatedSprite("idle-down"));
+        this.spriteTree.Add((Direction.LEFT, ProtagState.IDLE), atlas.CreateAnimatedSprite("idle-left"));
+        this.spriteTree.Add((Direction.RIGHT, ProtagState.IDLE), atlas.CreateAnimatedSprite("idle-right"));
 
-        this.airbornSpriteTree.Add(Direction.UP, atlas.CreateAnimatedSprite("jump-up"));
-        this.airbornSpriteTree.Add(Direction.DOWN, atlas.CreateAnimatedSprite("jump-down"));
-        this.airbornSpriteTree.Add(Direction.LEFT, atlas.CreateAnimatedSprite("jump-left"));
-        this.airbornSpriteTree.Add(Direction.RIGHT, atlas.CreateAnimatedSprite("jump-right"));
+        this.spriteTree.Add((Direction.UP, ProtagState.MOVING), atlas.CreateAnimatedSprite("walk-up"));
+        this.spriteTree.Add((Direction.DOWN, ProtagState.MOVING), atlas.CreateAnimatedSprite("walk-down"));
+        this.spriteTree.Add((Direction.LEFT, ProtagState.MOVING), atlas.CreateAnimatedSprite("walk-left"));
+        this.spriteTree.Add((Direction.RIGHT, ProtagState.MOVING), atlas.CreateAnimatedSprite("walk-right"));
+
+        this.spriteTree.Add((Direction.UP, ProtagState.AIRBORN), atlas.CreateAnimatedSprite("jump-up"));
+        this.spriteTree.Add((Direction.DOWN, ProtagState.AIRBORN), atlas.CreateAnimatedSprite("jump-down"));
+        this.spriteTree.Add((Direction.LEFT, ProtagState.AIRBORN), atlas.CreateAnimatedSprite("jump-left"));
+        this.spriteTree.Add((Direction.RIGHT, ProtagState.AIRBORN), atlas.CreateAnimatedSprite("jump-right"));
+
+        this.spriteTree.Add((Direction.UP, ProtagState.SWING), atlas.CreateAnimatedSprite("swing-up"));
+        this.spriteTree.Add((Direction.DOWN, ProtagState.SWING), atlas.CreateAnimatedSprite("swing-down"));
+        this.spriteTree.Add((Direction.LEFT, ProtagState.SWING), atlas.CreateAnimatedSprite("swing-left"));
+        this.spriteTree.Add((Direction.RIGHT, ProtagState.SWING), atlas.CreateAnimatedSprite("swing-right"));
     }
 
     public void Update(GameTime gameTime)
@@ -260,7 +284,7 @@ public class Protag : IControllable
 
         if (this.currentImpulseFrame < damageImpulseFrames)
         {
-            this.Velocity += this.impulseVel;
+            this.Velocity = this.impulseVel;
             this.currentImpulseFrame++;
         }
         else
@@ -279,24 +303,38 @@ public class Protag : IControllable
                 this.animationOffset.Y += 6;
             }
             this.currentJumpFrame++;
-            this.Hitbox.CollisionGroups &= CollisionUtil.groundedMask;
+            this.CurrentState = ProtagState.AIRBORN;
         }
         else
         {
-            this.airborn = false;
             this.animationOffset = new Vector2(0,0);
             this.Hitbox.CollisionGroups |= CollisionGroups.GROUNDED;
+        }
+
+        if(this.inAttack)
+        {
+            this.CurrentState = ProtagState.SWING;
+            this.currentActionFrame++;
+            if(this.currentActionFrame == AttackFrames)
+            {
+                this.inAttack = false;
+            }
         }
         
         this.ChooseSprite();
         this.HandleMovement();
-        this.currentSprite.Update(gameTime);
+        this.CurrentSprite.Update(gameTime);
+        if (this.resetSprite)
+        {
+            this.resetSprite = false;
+            this.CurrentSprite.Reset();
+        }
         this.Hitbox.Anchor = this.Center();
     }
 
     public void Draw(SpriteBatch sb)
     {
-        this.currentSprite.Draw(sb, this.Position + this.animationOffset);
+        this.CurrentSprite.Draw(sb, this.Position + this.animationOffset);
     }
 
     public Vector2 Center()

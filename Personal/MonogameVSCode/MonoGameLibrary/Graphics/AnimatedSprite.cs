@@ -57,4 +57,14 @@ public class AnimatedSprite : Sprite
             Region = _animation.Frames[_currentFrame];
         }
     }
+
+    /// <summary>
+    /// Updates the animated sprite to the first frame
+    /// </summary>
+    public void Reset()
+    {
+        _currentFrame = 0;
+        _elapsed = TimeSpan.FromMilliseconds(0);
+        Region = _animation.Frames[_currentFrame];
+    }
 }
