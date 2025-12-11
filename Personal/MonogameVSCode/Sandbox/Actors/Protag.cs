@@ -52,7 +52,7 @@ public class Protag : IControllable
     // constants
     private const int damageImpulse = 8;
 	private const int jumpFrames = 30;
-	private const int AttackFrames = 16;
+	private const int AttackFrames = 21;
 	private const int AttackInterruptibleAfter = 22;
     private const int courtesyFrames = 44;
     private const int damageImpulseFrames = 10;
@@ -124,7 +124,7 @@ public class Protag : IControllable
            this.inAttack = true;
            this.resetSprite = true;
            this.currentActionFrame = 0;
-           
+           this.Velocity = new Vector2(0,0);
         }
 
         if (keyboard.KeyReleased(Keys.W))
@@ -150,11 +150,8 @@ public class Protag : IControllable
 
     public void HandleMovement()
 	{
-		if (!inAttack)
-		{
-            this.Position = this.Position + this.Velocity;
-            this.Hitbox.Anchor = this.Center();
-		}
+        this.Position = this.Position + this.Velocity;
+        this.Hitbox.Anchor = this.Center();
 	}
 
     public void ChooseSprite()
@@ -227,8 +224,11 @@ public class Protag : IControllable
             }
 		}
 
-        this.Velocity = inputVel;
-        this.CurrentState = Velocity.Length() > 0 ? ProtagState.MOVING : ProtagState.IDLE;
+        if (!inAttack)
+		{
+            this.Velocity = inputVel;
+            this.CurrentState = Velocity.Length() > 0 ? ProtagState.MOVING : ProtagState.IDLE;
+        }
         
 	}
 
@@ -277,6 +277,7 @@ public class Protag : IControllable
 
     public void Update(GameTime gameTime)
     {
+        this.CheckKeyboardInput();
         if (this.currentCourtesyFrame < courtesyFrames)
         {
             this.currentCourtesyFrame++;
@@ -286,10 +287,6 @@ public class Protag : IControllable
         {
             this.Velocity = this.impulseVel;
             this.currentImpulseFrame++;
-        }
-        else
-        {
-            this.impulseVel = new Vector2(0,0);
         }
 
         if (this.currentJumpFrame < jumpFrames)
@@ -323,6 +320,11 @@ public class Protag : IControllable
         
         this.ChooseSprite();
         this.HandleMovement();
+        if (this.currentImpulseFrame == damageImpulseFrames)
+        {
+            this.impulseVel = new Vector2(0,0);
+            this.Velocity = this.impulseVel;
+        }
         this.CurrentSprite.Update(gameTime);
         if (this.resetSprite)
         {

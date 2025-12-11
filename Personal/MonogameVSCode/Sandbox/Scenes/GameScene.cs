@@ -87,7 +87,7 @@ public class GameScene : Scene
         _roomTop = new CollisionRectangle(
             CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS | CollisionGroups.AIRBORN,
             CollisionProperties.BLOCKING,
-            new Vector2(640, 80),
+            new Vector2(640, 40),
             80,
             1160,
             (CollisionGroups colG, CollisionProperties colP, Vector2 anchor, int height, int width) => { return; },
@@ -201,7 +201,6 @@ public class GameScene : Scene
         // CheckGamePadInput();
         
         // Update the protagonist.
-        _protag.CheckKeyboardInput();
         _protag.Update(gameTime);
 
         _collisionChecker.DetectCollisions();

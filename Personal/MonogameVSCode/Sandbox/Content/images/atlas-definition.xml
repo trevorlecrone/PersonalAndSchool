@@ -91,22 +91,22 @@
             <Frame region="jump-down-3" />
         </Animation>
         <!-- Actions -->
-        <Animation name="swing-right" delay="160">
+        <Animation name="swing-right" delay="120">
             <Frame region="swing-right-1" />
             <Frame region="swing-right-2" />
             <Frame region="swing-right-2" />
         </Animation>
-        <Animation name="swing-up" delay="160">
+        <Animation name="swing-up" delay="120">
             <Frame region="swing-up-1" />
             <Frame region="swing-up-2" />
             <Frame region="swing-up-2" />
         </Animation>
-        <Animation name="swing-left" delay="160">
+        <Animation name="swing-left" delay="120">
             <Frame region="swing-left-1" />
             <Frame region="swing-left-2" />
             <Frame region="swing-left-2" />
         </Animation>
-        <Animation name="swing-down" delay="160">
+        <Animation name="swing-down" delay="120">
             <Frame region="swing-down-1" />
             <Frame region="swing-down-2" />
             <Frame region="swing-down-2" />
