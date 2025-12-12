@@ -8,7 +8,6 @@ namespace Sandbox;
 
 public class Bat
 {
-
     // Animation Objects
     private AnimatedSprite sprite;
     public int Height;

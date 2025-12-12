@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Pipelines;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
@@ -175,7 +176,22 @@ public class TextureAtlas
                             }
                         }
 
-                        Animation animation = new Animation(frames, delay);
+                         List<Vector2> offsets = new List<Vector2>();
+
+                        var originElements = animationElement.Elements("Offset");
+
+                        if (originElements != null)
+                        {
+                            foreach (var originElement in originElements)
+                            {
+                                float originX = float.Parse(originElement.Attribute("x").Value);
+                                float originY = float.Parse(originElement.Attribute("y").Value);
+                                Vector2 originVec = new Vector2(originX, originY);
+                                offsets.Add(originVec);
+                            }
+                        }
+
+                        Animation animation = new Animation(frames, offsets, delay);
                         atlas.AddAnimation(name, animation);
                     }
                 }
@@ -235,4 +251,19 @@ public class TextureAtlas
         Animation animation = GetAnimation(animationName);
         return new AnimatedSprite(animation);
     }
+    
+    /// <summary>
+    /// Creates a new animated sprite with origin as center using the animation from this texture atlas with the specified name.
+    /// </summary>
+    /// <param name="animationName">The name of the animation to use.</param>
+    /// <returns>A new AnimatedSprite using the animation with the specified name.</returns>
+    public AnimatedSprite CreateCenteredAnimatedSprite(string animationName)
+    {
+        Animation animation = GetAnimation(animationName);
+        var result = new AnimatedSprite(animation);
+        result.CenterOrigin();
+        return result;
+    }
+        
+        
 }

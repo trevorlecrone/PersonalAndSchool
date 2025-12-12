@@ -52,10 +52,13 @@ public class Protag : IControllable
     // constants
     private const int damageImpulse = 8;
 	private const int jumpFrames = 30;
-	private const int AttackFrames = 21;
+	private const int AttackFrames = 16;
 	private const int AttackInterruptibleAfter = 22;
     private const int courtesyFrames = 44;
     private const int damageImpulseFrames = 10;
+    private Sword sword;
+
+    private HashSet<Item> activeItems = new HashSet<Item>();
 
     // externals
     
@@ -85,6 +88,7 @@ public class Protag : IControllable
             this.Width,
             this.HandleCollision,
             1);
+        this.sword = new Sword(atlas, this.Center(), this.Facing);
     }
 
     public void CheckKeyboardInput()
@@ -125,6 +129,11 @@ public class Protag : IControllable
            this.resetSprite = true;
            this.currentActionFrame = 0;
            this.Velocity = new Vector2(0,0);
+           this.sword.Position = this.Center();
+           this.sword.SetFacing(this.Facing);
+           this.sword.ResetSprite();
+           this.activeItems.Add(this.sword);
+           
         }
 
         if (keyboard.KeyReleased(Keys.W))
@@ -314,6 +323,7 @@ public class Protag : IControllable
             this.currentActionFrame++;
             if(this.currentActionFrame == AttackFrames)
             {
+                this.activeItems.Remove(this.sword);
                 this.inAttack = false;
             }
         }
@@ -326,6 +336,10 @@ public class Protag : IControllable
             this.Velocity = this.impulseVel;
         }
         this.CurrentSprite.Update(gameTime);
+        foreach (var item in activeItems)
+        {
+            item.Update(gameTime);
+        }
         if (this.resetSprite)
         {
             this.resetSprite = false;
@@ -337,6 +351,10 @@ public class Protag : IControllable
     public void Draw(SpriteBatch sb)
     {
         this.CurrentSprite.Draw(sb, this.Position + this.animationOffset);
+        foreach (var item in activeItems)
+        {
+            item.Draw(sb);
+        }
     }
 
     public Vector2 Center()

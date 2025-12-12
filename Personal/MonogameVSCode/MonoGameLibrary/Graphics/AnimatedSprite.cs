@@ -57,6 +57,10 @@ public class AnimatedSprite : Sprite
             Region = _animation.Frames[_currentFrame];
         }
     }
+    public Vector2 GetOffset()
+    {
+        return Animation.Offsets[_currentFrame];
+    }
 
     /// <summary>
     /// Updates the animated sprite to the first frame
