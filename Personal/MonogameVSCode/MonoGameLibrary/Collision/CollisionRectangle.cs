@@ -50,21 +50,33 @@ public class CollisionRectangle : ICollidable
 
     public float Top()
     {
-        return this.Anchor.Y - Height/2;
+        return this.Anchor.Y - (Height/2);
     }
 
     public float Bottom()
     {
-        return this.Anchor.Y + Height/2;
+        return this.Anchor.Y + (Height/2);
     }
 
     public float Left()
     {
-        return this.Anchor.X - Width/2;
+        return this.Anchor.X - (Width/2);
     }
 
     public float Right()
     {
-        return this.Anchor.X + Width/2;
+        return this.Anchor.X + (Width/2);
+    }
+
+    public void SetHeight(int height)
+    {
+        this.Height = height;
+        this.DebugSprite.Scale = new Vector2(this.Width, this.Height);
+    }
+
+    public void SetWidth(int width)
+    {
+        this.Width = width;
+        this.DebugSprite.Scale = new Vector2(this.Width, this.Height);
     }
 }

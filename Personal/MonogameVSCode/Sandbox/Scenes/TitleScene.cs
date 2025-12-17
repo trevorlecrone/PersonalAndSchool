@@ -54,6 +54,8 @@ public class TitleScene : Scene
         // LoadContent is called during base.Initialize().
         base.Initialize();
 
+        this.CheckCollisions = false;
+
         // While on the title screen, we can enable exit on escape so the player
         // can close the game by pressing the escape key.
         Core.ExitOnEscape = true;

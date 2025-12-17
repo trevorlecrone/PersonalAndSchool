@@ -17,6 +17,16 @@ public class CollisionChecker
         this.CollisionRects = _collisionRects;
     }
 
+    public void Clear ()
+    {
+        this.CollisionRects.Clear();
+    }
+
+    public void Add (CollisionRectangle _rect)
+    {
+        this.CollisionRects.Add(_rect);
+    }
+
     public void Remove (CollisionRectangle _rect)
     {
         this.CollisionRects.Remove(_rect);

@@ -43,9 +43,6 @@ public class GameScene : Scene
     // Defines the right of the room
     private CollisionRectangle _groundedOnly;
 
-    // the CollisionChecker
-    private CollisionChecker _collisionChecker;
-
     // The sound effect to play when the bat bounces off the edge of the screen.
     private SoundEffect _bounceSoundEffect;
 
@@ -74,6 +71,7 @@ public class GameScene : Scene
         // During the game scene, we want to disable exit on escape. Instead,
         // the escape key will be used to return back to the title screen
         Core.ExitOnEscape = false;
+        Core.Collision.Clear();
 
         Rectangle screenBounds = Core.GraphicsDevice.PresentationParameters.Bounds;
 
@@ -124,12 +122,10 @@ public class GameScene : Scene
             4
         );
 
-        _collisionChecker = new CollisionChecker();
-
-        _collisionChecker.CollisionRects.Add(_roomTop);
-        _collisionChecker.CollisionRects.Add(_roomBottom);
-        _collisionChecker.CollisionRects.Add(_roomLeft);
-        _collisionChecker.CollisionRects.Add(_roomRight);
+        Core.Collision.Add(_roomTop);
+        Core.Collision.Add(_roomBottom);
+        Core.Collision.Add(_roomLeft);
+        Core.Collision.Add(_roomRight);
 
         // Initial protagonist position will be the center tile of the tile map.
         int centerRow = _tilemap.Rows / 2;
@@ -137,7 +133,7 @@ public class GameScene : Scene
         _protag.Position = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeight);
         _protag.Hitbox.Anchor = _protag.Position;
 
-        _collisionChecker.CollisionRects.Add(_protag.Hitbox);
+        Core.Collision.Add(_protag.Hitbox);
 
         // Initial bat position will the in the top left corner of the room.
         _bat.Position = new Vector2(_roomLeft.Right() + 100, _roomTop.Bottom() + 100);
@@ -152,7 +148,7 @@ public class GameScene : Scene
 
         _bat.AssignRandomVelocity();
 
-        _collisionChecker.CollisionRects.Add(_bat.Hitbox);
+        Core.Collision.Add(_bat.Hitbox);
 
         _groundedOnly = new CollisionRectangle(
             CollisionGroups.GROUNDED | CollisionGroups.ACTIONLESS,
@@ -164,7 +160,7 @@ public class GameScene : Scene
             9
         );
 
-         _collisionChecker.CollisionRects.Add(_groundedOnly);
+         Core.Collision.Add(_groundedOnly);
     }
 
     public override void LoadContent()
@@ -202,8 +198,6 @@ public class GameScene : Scene
         
         // Update the protagonist.
         _protag.Update(gameTime);
-
-        _collisionChecker.DetectCollisions();
 
         // Update the bat.
         _bat.Update(gameTime);
@@ -296,7 +290,7 @@ public class GameScene : Scene
 
         if(DEBUG)
         {
-            foreach (var colR in _collisionChecker.CollisionRects)
+            foreach (var colR in Core.Collision.CollisionRects)
             {
                 colR.DebugSprite.Draw(Core.SpriteBatch, new Vector2(colR.Left(), colR.Top()));
             }

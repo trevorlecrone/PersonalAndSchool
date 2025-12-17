@@ -117,35 +117,35 @@
         </Animation>
          <Animation name="sword-attack-right" delay="90">
             <Frame region="sword-up" />
-            <Offset x="12" y="-60" />
+            <Offset x="0" y="0" />
             <Frame region="sword-swing" />
-            <Offset x="44" y="-50" />
+            <Offset x="0" y="0" />
             <Frame region="sword-side" />
-            <Offset x="40" y="35" />
+            <Offset x="0" y="0" />
         </Animation>
          <Animation name="sword-attack-up" delay="90">
-            <Frame region="sword-up" />
-            <Offset x="58" y="-4" />
-            <Frame region="sword-swing" />
-            <Offset x="62" y="-66" />
             <Frame region="sword-side" />
-            <Offset x="-35" y="-76" />
+            <Offset x="0" y="0" />
+            <Frame region="sword-swing" />
+            <Offset x="0" y="0" />
+            <Frame region="sword-up" />
+            <Offset x="0" y="0" />
         </Animation>
         <Animation name="sword-attack-left" delay="90">
             <Frame region="sword-up" />
-            <Offset x="-12" y="-60" />
+            <Offset x="0" y="0" />
             <Frame region="sword-swing" />
-            <Offset x="-80" y="-50" />
+            <Offset x="0" y="0" />
             <Frame region="sword-side" />
-            <Offset x="-76" y="35" />
+            <Offset x="-0" y="0" />
         </Animation>
         <Animation name="sword-attack-down" delay="90">
-            <Frame region="sword-up" />
-            <Offset x="-59" y="12" />
-            <Frame region="sword-swing" />
-            <Offset x="-62" y="67" />
             <Frame region="sword-side" />
-            <Offset x="31" y="76" />
+            <Offset x="0" y="0" />
+            <Frame region="sword-swing" />
+            <Offset x="0" y="0" />
+            <Frame region="sword-up" />
+            <Offset x="0" y="0" />
         </Animation>
 
         <!-- Enemy movement -->

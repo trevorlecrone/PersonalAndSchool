@@ -325,17 +325,17 @@ public class Protag : IControllable
             {
                 this.activeItems.Remove(this.sword);
                 this.inAttack = false;
+                Core.Collision.Remove(this.sword.Hitbox);
             }
         }
-        
         this.ChooseSprite();
         this.HandleMovement();
+        this.Hitbox.Anchor = this.Center();
         if (this.currentImpulseFrame == damageImpulseFrames)
         {
             this.impulseVel = new Vector2(0,0);
             this.Velocity = this.impulseVel;
         }
-        this.CurrentSprite.Update(gameTime);
         foreach (var item in activeItems)
         {
             item.Update(gameTime);
@@ -345,16 +345,16 @@ public class Protag : IControllable
             this.resetSprite = false;
             this.CurrentSprite.Reset();
         }
-        this.Hitbox.Anchor = this.Center();
+        this.CurrentSprite.Update(gameTime);
     }
 
     public void Draw(SpriteBatch sb)
     {
-        this.CurrentSprite.Draw(sb, this.Position + this.animationOffset);
         foreach (var item in activeItems)
         {
             item.Draw(sb);
         }
+        this.CurrentSprite.Draw(sb, this.Position + this.animationOffset);
     }
 
     public Vector2 Center()

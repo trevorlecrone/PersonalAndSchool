@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary.Audio;
+using MonoGameLibrary.Collision;
 using MonoGameLibrary.Input;
 using MonoGameLibrary.Scenes;
 
@@ -58,6 +59,11 @@ public class Core : Game
     /// Gets a reference to the audio control system.
     /// </summary>
     public static AudioController Audio { get; private set; }
+
+    /// <summary>
+    /// Gets a reference to the audio control system.
+    /// </summary>
+    public static CollisionChecker Collision { get; private set; }
 
     /// <summary>
     /// Creates a new Core instance.
@@ -121,6 +127,9 @@ public class Core : Game
 
         // Create a new audio controller.
         Audio = new AudioController();
+
+        // Create a new Collision handler
+        Collision = new CollisionChecker();
     }
 
     protected override void UnloadContent()
@@ -155,6 +164,12 @@ public class Core : Game
         if (s_activeScene != null)
         {
             s_activeScene.Update(gameTime);
+        }
+
+        // If there is an active scene, update it.
+        if (s_activeScene != null)
+        {
+            Collision.DetectCollisions();
         }
 
         base.Update(gameTime);

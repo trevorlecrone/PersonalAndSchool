@@ -20,6 +20,11 @@ public abstract class Scene : IDisposable
     public bool IsDisposed { get; private set; }
 
     /// <summary>
+    /// Gets a value that indicates if the scene should run collision checks
+    /// </summary>
+    public bool CheckCollisions { get; protected set; }
+
+    /// <summary>
     /// Creates a new scene instance.
     /// </summary>
     public Scene()
@@ -30,6 +35,8 @@ public abstract class Scene : IDisposable
         // Set the root directory for content to the same as the root directory
         // for the game's content.
         Content.RootDirectory = Core.Content.RootDirectory;
+
+        CheckCollisions = true;
     }
 
     // Finalizer, called when object is cleaned up by garbage collector.

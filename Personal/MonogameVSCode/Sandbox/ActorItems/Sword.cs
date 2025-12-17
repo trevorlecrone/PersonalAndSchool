@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary;
 using MonoGameLibrary.Collision;
 using MonoGameLibrary.Graphics;
 
@@ -11,23 +12,20 @@ namespace Sandbox;
 public class Sword : Item
 {
     // Animation Objects
-     private Dictionary<Direction, AnimatedSprite> spriteTree = new Dictionary<Direction, AnimatedSprite>();
-    private AnimatedSprite currentSprite;
-    private Dictionary<Direction, float> facingMap = new Dictionary<Direction, float>
+    private Dictionary<Direction, AnimatedSprite> spriteTree = new Dictionary<Direction, AnimatedSprite>();
+    private Dictionary<int, (int width, int height)> hitboxDimensions = new Dictionary<int, (int, int)>
     {
-        {Direction.LEFT, 0.0f},
-        {Direction.UP, (float)Math.PI/2},
-        {Direction.RIGHT, 0.0f},
-        {Direction.DOWN, (float)(Math.PI*1.5)},
-
+        {0, (40, 90)},
+        {2, (90, 40)}
     };
-
+    private AnimatedSprite currentSprite;
+    private TextureRegion currentFrame;
     private Dictionary<Direction, SpriteEffects> facingEffectsMap = new Dictionary<Direction, SpriteEffects>
     {
         {Direction.LEFT, SpriteEffects.None},
-        {Direction.UP, SpriteEffects.None},
+        {Direction.UP, SpriteEffects.FlipHorizontally},
         {Direction.RIGHT, SpriteEffects.FlipHorizontally},
-        {Direction.DOWN, SpriteEffects.None},
+        {Direction.DOWN, SpriteEffects.FlipVertically},
 
     };
     public Direction Facing = Direction.DOWN;
@@ -57,11 +55,11 @@ public class Sword : Item
             this.CollisionProperties,
             this.Position,
             this.Height+10,
-            this.Width+5,
+            this.Width+15,
             this.HandleCollision,
-            1);
-        this.currentSprite.Rotation = this.facingMap[this.Facing];
+            55);
         this.currentSprite.Effects = this.facingEffectsMap[this.Facing];
+        this.Hitbox.DebugSprite.Color = Color.Red * 0.5f;
         
     }
     
@@ -78,33 +76,45 @@ public class Sword : Item
 
     private void ConstructSpriteTrees(TextureAtlas atlas)
     {
-        this.spriteTree.Add(Direction.UP, atlas.CreateCenteredAnimatedSprite("sword-attack-up"));
-        this.spriteTree.Add(Direction.DOWN, atlas.CreateCenteredAnimatedSprite("sword-attack-down"));
-        this.spriteTree.Add(Direction.LEFT,  atlas.CreateCenteredAnimatedSprite("sword-attack-left"));
-        this.spriteTree.Add(Direction.RIGHT, atlas.CreateCenteredAnimatedSprite("sword-attack-right"));
+        this.spriteTree.Add(Direction.UP, atlas.CreateAnimatedSprite("sword-attack-up"));
+        this.spriteTree.Add(Direction.DOWN, atlas.CreateAnimatedSprite("sword-attack-down"));
+        this.spriteTree.Add(Direction.LEFT,  atlas.CreateAnimatedSprite("sword-attack-left"));
+        this.spriteTree.Add(Direction.RIGHT, atlas.CreateAnimatedSprite("sword-attack-right"));
     }
 
     public void Update(GameTime gameTime)
     {
         this.currentSprite.Update(gameTime);
-        this.Hitbox.Anchor = this.HitBoxCenter();
+        this.currentFrame = this.currentSprite.Animation.Frames[this.currentSprite._currentFrame];
+        (int width, int height) dimensionTuple;
+        if (this.hitboxDimensions.TryGetValue(this.currentSprite._currentFrame, out dimensionTuple))
+        {
+            Core.Collision.Remove(this.Hitbox);
+            this.Hitbox.SetHeight(dimensionTuple.height);
+            this.Hitbox.SetWidth(dimensionTuple.width);
+            this.Hitbox.Anchor = this.HitBoxCenter(dimensionTuple);
+            Core.Collision.Add(this.Hitbox);
+        }
     }
     public void SetFacing(Direction facing)
     {
         this.Facing = facing;
         this.currentSprite = this.spriteTree[this.Facing];
-        this.currentSprite.Rotation = this.facingMap[this.Facing];
         this.currentSprite.Effects = this.facingEffectsMap[this.Facing];
     }
 
     public void ResetSprite()
     {
+        Core.Collision.Remove(this.Hitbox);
+        Core.Collision.Add(this.Hitbox);
         this.currentSprite.Reset();
     }
 
-    public Vector2 HitBoxCenter()
+    public Vector2 HitBoxCenter((int width, int height) dimensionTuple)
     {
-        return new Vector2(this.Position.X + this.Width/2, this.Position.Y + this.Height/2);
+        var widthOffset = this.currentFrame.Width/2;
+        var heightOffset = this.currentFrame.Height/2;
+        return new Vector2(Position.X + widthOffset, Position.Y + heightOffset);
     }
 
     public void Draw(SpriteBatch sb)
