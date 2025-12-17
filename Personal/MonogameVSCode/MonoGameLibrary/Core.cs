@@ -166,8 +166,8 @@ public class Core : Game
             s_activeScene.Update(gameTime);
         }
 
-        // If there is an active scene, update it.
-        if (s_activeScene != null)
+        // If the scene needs to check collision do so
+        if (s_activeScene.CheckCollisions)
         {
             Collision.DetectCollisions();
         }
