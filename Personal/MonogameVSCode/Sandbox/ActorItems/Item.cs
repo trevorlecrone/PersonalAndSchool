@@ -9,4 +9,5 @@ public interface Item
     void ResetSprite();
     void Draw(SpriteBatch sb);
     void SetFacing(Direction sb);
+    void SetPosition(Vector2 position);
 }

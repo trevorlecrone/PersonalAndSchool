@@ -13,13 +13,9 @@ public class Sword : Item
 {
     // Animation Objects
     private Dictionary<Direction, AnimatedSprite> spriteTree = new Dictionary<Direction, AnimatedSprite>();
-    private Dictionary<int, (int width, int height)> hitboxDimensions = new Dictionary<int, (int, int)>
-    {
-        {0, (40, 90)},
-        {2, (90, 40)}
-    };
     private AnimatedSprite currentSprite;
     private TextureRegion currentFrame;
+    private Vector2 currentOffset;
     private Dictionary<Direction, SpriteEffects> facingEffectsMap = new Dictionary<Direction, SpriteEffects>
     {
         {Direction.LEFT, SpriteEffects.None},
@@ -86,13 +82,14 @@ public class Sword : Item
     {
         this.currentSprite.Update(gameTime);
         this.currentFrame = this.currentSprite.Animation.Frames[this.currentSprite._currentFrame];
-        (int width, int height) dimensionTuple;
-        if (this.hitboxDimensions.TryGetValue(this.currentSprite._currentFrame, out dimensionTuple))
+        this.currentOffset = this.currentSprite.Animation.Offsets[this.currentSprite._currentFrame];
+        (int width, int height, int xOffset, int yOffset) hitboxTuple;
+        if (this.currentSprite.Animation.HitboxInfo.TryGetValue(this.currentSprite._currentFrame, out hitboxTuple))
         {
             Core.Collision.Remove(this.Hitbox);
-            this.Hitbox.SetHeight(dimensionTuple.height);
-            this.Hitbox.SetWidth(dimensionTuple.width);
-            this.Hitbox.Anchor = this.HitBoxCenter(dimensionTuple);
+            this.Hitbox.SetHeight(hitboxTuple.height);
+            this.Hitbox.SetWidth(hitboxTuple.width);
+            this.Hitbox.Anchor = this.HitBoxCenter(hitboxTuple);
             Core.Collision.Add(this.Hitbox);
         }
     }
@@ -103,18 +100,22 @@ public class Sword : Item
         this.currentSprite.Effects = this.facingEffectsMap[this.Facing];
     }
 
+    public void SetPosition(Vector2 position)
+    {
+        this.Position = position;
+    }
+
     public void ResetSprite()
     {
         Core.Collision.Remove(this.Hitbox);
-        Core.Collision.Add(this.Hitbox);
         this.currentSprite.Reset();
     }
 
-    public Vector2 HitBoxCenter((int width, int height) dimensionTuple)
+    public Vector2 HitBoxCenter((int width, int height, int xOffset, int yOffset) hitboxTuple)
     {
-        var widthOffset = this.currentFrame.Width/2;
-        var heightOffset = this.currentFrame.Height/2;
-        return new Vector2(Position.X + widthOffset, Position.Y + heightOffset);
+        var x =  this.Position.X + this.currentOffset.X + this.currentFrame.Width/2 + hitboxTuple.xOffset;
+        var y =  this.Position.Y + this.currentOffset.Y + this.currentFrame.Height/2 + hitboxTuple.yOffset;
+        return new Vector2(x,y);
     }
 
     public void Draw(SpriteBatch sb)

@@ -338,6 +338,7 @@ public class Protag : IControllable
         }
         foreach (var item in activeItems)
         {
+            item.SetPosition(this.Center());
             item.Update(gameTime);
         }
         if (this.resetSprite)

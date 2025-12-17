@@ -109,17 +109,6 @@ public class TextureAtlas
                 string texturePath = root.Element("Texture").Value;
                 atlas.Texture = content.Load<Texture2D>(texturePath);
 
-                // The <Regions> element contains individual <Region> elements, each one describing
-                // a different texture region within the atlas.  
-                //
-                // Example:
-                // <Regions>
-                //      <Region name="spriteOne" x="0" y="0" width="32" height="32" />
-                //      <Region name="spriteTwo" x="32" y="0" width="32" height="32" />
-                // </Regions>
-                //
-                // So we retrieve all of the <Region> elements then loop through each one
-                // and generate a new TextureRegion instance from it and add it to this atlas.
                 var regions = root.Element("Regions")?.Elements("Region");
 
                 if (regions != null)
@@ -139,19 +128,7 @@ public class TextureAtlas
                     }
                 }
 
-                // The <Animations> element contains individual <Animation> elements, each one describing
-                // a different animation within the atlas.
-                //
-                // Example:
-                // <Animations>
-                //      <Animation name="animation" delay="100">
-                //          <Frame region="spriteOne" />
-                //          <Frame region="spriteTwo" />
-                //      </Animation>
-                // </Animations>
-                //
-                // So we retrieve all of the <Animation> elements then loop through each one
-                // and generate a new Animation instance from it and add it to this atlas.
+                
                 var animationElements = root.Element("Animations").Elements("Animation");
 
                 if (animationElements != null)
@@ -176,22 +153,40 @@ public class TextureAtlas
                             }
                         }
 
-                         List<Vector2> offsets = new List<Vector2>();
+                        List<Vector2> offsets = new List<Vector2>();
 
-                        var originElements = animationElement.Elements("Offset");
+                        var offsetElements = animationElement.Elements("Offset");
 
-                        if (originElements != null)
+                        if (offsetElements != null)
                         {
-                            foreach (var originElement in originElements)
+                            foreach (var offsetElement in offsetElements)
                             {
-                                float originX = float.Parse(originElement.Attribute("x").Value);
-                                float originY = float.Parse(originElement.Attribute("y").Value);
-                                Vector2 originVec = new Vector2(originX, originY);
-                                offsets.Add(originVec);
+                                float offsetX = float.Parse(offsetElement.Attribute("x").Value);
+                                float offsetY = float.Parse(offsetElement.Attribute("y").Value);
+                                Vector2 offsetVec = new Vector2(offsetX, offsetY);
+                                offsets.Add(offsetVec);
                             }
                         }
 
-                        Animation animation = new Animation(frames, offsets, delay);
+                        Dictionary<int, (int width, int height, int xOffset, int yOffset)> hitboxes = new Dictionary<int, (int width, int height, int xOffset, int yOffset)>();
+
+                        var hitboxElements = animationElement.Elements("Hitbox");
+
+                        if (hitboxElements != null)
+                        {
+                            foreach (var hitboxElement in hitboxElements)
+                            {
+                                int startFrame = int.Parse(hitboxElement.Attribute("startFrame").Value);
+                                int width = int.Parse(hitboxElement.Attribute("width").Value);
+                                int height = int.Parse(hitboxElement.Attribute("height").Value);
+                                int xOffset = int.Parse(hitboxElement.Attribute("xOffset").Value);
+                                int yOffset = int.Parse(hitboxElement.Attribute("yOffset").Value);
+
+                                hitboxes.Add(startFrame, (width, height, xOffset, yOffset));
+                            }
+                        }
+
+                        Animation animation = new Animation(frames, offsets, delay, hitboxes);
                         atlas.AddAnimation(name, animation);
                     }
                 }
